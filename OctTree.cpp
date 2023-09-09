@@ -55,14 +55,11 @@ void calcBox(Node* node, Point3 TLB, Point3 BRF, uint8_t depth) {
 // Caso 1: plano yz, divide o x ao meio
 
 void divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, Point3 &new_BRF, uint8_t depth){
-  switch(depth){
-    case(3):
-      
-      break;
-    case(2):
-      break;
-    case(1):
-      break;
-  }
-  return;
+  int coord = depth - 1;
+  double l = TLB[coord] - BRF[coord];
+  new_TLB = TLB;
+  new_TLB[coord] = TLB[coord]-(l/2.0);
+
+  new_BRF = BRF;
+  new_BRF[coord] = BRF[coord]+(l/2.0);
 }

@@ -1,0 +1,14 @@
+Pensar em como será a interseção  
+R:
+
+Pensar em qual ferramenta grafica iremos usar
+R:OpenGl
+
+Pensar em como vamos modelar o tema
+R:
+
+Testar a arvore
+R:
+
+Gerar o no raiz a partir de Solid
+R:
