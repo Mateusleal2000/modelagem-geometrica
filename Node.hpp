@@ -14,14 +14,18 @@ enum class State{
 class Node{
 	public:   
 		Node();
+    Node(Node * parent, Box * box);
+    ~Node();
 		State getState();
 		Node * getParent();
 		Node * getChild(int index);
 		Box * getBox();
 		void setState(State state);
     void setParent(Node * parent);
-    void setChild(Node * child, int index);
+    void setChild(Node * child);
     void setBox(Box* box);
+    double calcArea();
+    double calcVolume();
     
     
   //operators  
@@ -45,8 +49,8 @@ class Node{
 
 };
 
-inline void Node::setChild(Node * child, int index){
-	this->children[index] = child;
+inline void Node::setChild(Node * child){
+	this->children.emplace_back(child);
 };
 
 inline void Node::setState(State state){

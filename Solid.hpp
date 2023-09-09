@@ -1,19 +1,23 @@
 #ifndef SOLID_H
 #define SOLID_H
 
-
-class Box;
+#include "Node.hpp"
+#include "vec3.hpp"
 
 class Solid{
 
   public:
     ~Solid();
-    virtual State classify(Box * box) = 0;
+    void classify(Node * node);
+    void setColor(RGBcolor color);
 
   private:
-    double area;
-    double volume;
+    RGBcolor color;
 
 };
+
+inline void Solid::setColor(RGBcolor color){
+  this->color = color;
+}
 
 #endif
