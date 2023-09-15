@@ -5,7 +5,23 @@ Sphere::Sphere(double rad, Point3 & center): radius(rad), center(center){
 }
 
 void Sphere::classify(Node *node){
-    return;
+    Point3 brf = node->getBox()->getBRF();
+    Point3 tlb = node->getBox()->getTLB();
+    Point3 temp;
+    
+    checkIntersect(brf);
+    for (int i=0;i<3;i++){
+        temp = brf;
+        temp[i]=tlb[i];
+        checkIntersect(temp);
+    }
+
+    checkIntersect(tlb);
+    for (int i=0;i<3;i++){
+        temp = tlb;
+        temp[i]=brf[i];
+        checkIntersect(temp);
+    }
 }
 
 void Sphere::setRadius(double rad){
