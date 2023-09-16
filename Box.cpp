@@ -15,3 +15,14 @@ Point3 & Box::getBRF(){
 Point3 & Box::getTLB(){
   return top_left_back;
 }
+
+double Box::getBmin(int axis){
+  double min = TLB[axis] <= BRF[axis] ? TLB[axis] : BRF[axis];
+  return min;
+}
+
+
+double Box::getBmax(int axis){
+  double max = TLB[axis] > BRF[axis] ? TLB[axis] : BRF[axis];
+  return max;
+}

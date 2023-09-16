@@ -1,9 +1,12 @@
 #include "Sphere.hpp"
+#include <iostream>
+#include <math.h>
 
 
 Sphere::Sphere(double rad, Point3 & center): radius(rad), center(center){
 }
 
+/*
 void Sphere::classify(Node *node){
     Point3 brf = node->getBox()->getBRF();
     Point3 tlb = node->getBox()->getTLB();
@@ -23,6 +26,28 @@ void Sphere::classify(Node *node){
         checkIntersect(temp);
     }
 }
+*/
+
+void Sphere::classify(Node * node){
+	double dmin = 0;
+	double dmax = 0;
+
+  for(int i = 0; i<3; i++){
+		double a = center[i] - getBmin(i);
+		double b = center[i] - getBmax(i);
+		if(center[i] < getBmin(i)){
+			dmin += (a*a);
+
+		}
+		else if(center[i] > getBmax(i)){
+			dmin += (b*b);
+		}
+		// dmin = std::min(a*a, b*b)
+		dmax += std::max(a*a, b*b);
+  }
+
+}
+
 
 void Sphere::setRadius(double rad){
     radius = rad;

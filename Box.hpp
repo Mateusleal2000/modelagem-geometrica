@@ -7,6 +7,8 @@ class Box{
 		void setBRF(Point3 & brf);
 		Point3 & getTLB();
 		Point3 & getBRF();
+		double getBmin(int axis);
+		double getBmax(int axis);
 	private:
 		Point3 top_left_back;
 		Point3 bottom_right_front;
