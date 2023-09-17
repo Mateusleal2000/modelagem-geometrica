@@ -15,7 +15,6 @@ Node::~Node(){
     std::cout<<"deleting child\n";
     delete children[i];
   }
-  //delete[] children;
   delete box;
 }
 

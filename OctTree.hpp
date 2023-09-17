@@ -20,6 +20,7 @@ class OctTree{
 		void setMaxDepth(int maxDepth);
 		double calcArea() const;
 		double calcVolume() const;
+		void printOctTree(Node * node);
 
 	private:
     void subdivide(Node * node);

@@ -23,6 +23,7 @@ void OctTree::initOctTree(){
   std::cout<<"entering makeOctTree\n";
   makeOctTree(root,maxDepth);
   std::cout<<"exiting makeOctTree within initOctTree\n";
+  printOctTree(root);
 }
 
 void OctTree::makeOctTree(Node * child, int depth) {
@@ -46,8 +47,7 @@ void OctTree::makeOctTree(Node * child, int depth) {
       std::cout<<"8 children done";
       std::cout<<"==//====//====//==\n";
     }
-  } else {std::cout<<"makeOctTree depth<=1 done\n";}
-  
+  }
 }
 
 void OctTree::subdivide(Node * node) {
@@ -76,8 +76,6 @@ void OctTree::calcBox(Node* node, Point3 TLB, Point3 BRF, uint8_t depth) {
   }
 
   divideBox(TLB, BRF, new_TLB, new_BRF, depth);
-  std::cout<<"divideBox done\n";
-  //std::cout<<"divideBox done at depth = "<<depth<<"\n";
   calcBox(node, new_TLB, BRF, depth-1);
   calcBox(node, TLB, new_BRF, depth-1);
 }
@@ -94,4 +92,17 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 
   new_BRF = BRF;
   new_BRF[coord] = BRF[coord]+(l/2.0);
+}
+
+void OctTree::printOctTree(Node * node){
+  Point3 tlb = node->getBox()->getTLB();
+  Point3 brf = node->getBox()->getBRF();
+  std::cout << "(" << tlb.x() << "," << tlb.y() << "," << tlb.z() << ")" << ","; 
+  std::cout<<"(" << brf.x() << "," << brf.y() << "," << brf.z() << ")" << ",";
+  if(node->getState() != State::GRAY){
+    return;
+  }
+  for(int i = 0;i<8;i++){
+    printOctTree(node->getChild(i));
+  }
 }
