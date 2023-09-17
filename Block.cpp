@@ -3,23 +3,7 @@
 Block::Block(){}
 
 
-Block::Block(Point3 tlb, Point3 brf){
-  top_left_back = tlb;
-  bottom_right_front = brf;
-}
+Block::Block(Point3 p_min, double size_x,double size_y,double size_z): size_x(size_x), 
+size_y(size_y), 
+size_z(size_z) {}
 
-void Block::setBRF(Point3 & brf){
-  this->bottom_right_front = brf;
-}
-
-void Block::setTLB(Point3 & tlb){
-  this->top_left_back = tlb;
-}
-
-Point3 & Block::getBRF(){
-  return bottom_right_front;
-}
-
-Point3 & Block::getTLB(){
-  return top_left_back;
-}

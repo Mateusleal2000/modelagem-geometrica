@@ -8,7 +8,7 @@
 enum class State{
     BLACK,
     WHITE,
-    PARTIAL
+    GRAY
 };
 
 class Node{
@@ -33,7 +33,7 @@ class Node{
     Node & operator=(Node & n){
 			state = n.getState();
 			parent = n.getParent();
-			if(n.getState() == State::PARTIAL){
+			if(n.getState() == State::GRAY){
 			  for(int i = 0; i < 8; i++){
           children[i] = n.getChild(i);
         }

@@ -17,12 +17,12 @@ Point3 & Box::getTLB(){
 }
 
 double Box::getBmin(int axis){
-  double min = TLB[axis] <= BRF[axis] ? TLB[axis] : BRF[axis];
+  double min = top_left_back[axis] <= bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
   return min;
 }
 
 
 double Box::getBmax(int axis){
-  double max = TLB[axis] > BRF[axis] ? TLB[axis] : BRF[axis];
+  double max = top_left_back[axis] > bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
   return max;
 }

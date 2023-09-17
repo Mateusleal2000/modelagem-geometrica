@@ -45,22 +45,35 @@ void Sphere::classify(Node * node){
 		// dmin = std::min(a*a, b*b)
 		dmax += std::max(a*a, b*b);
   }
-
+  double radius2 = radius*radius;
+	if(dmax <= radius2){
+		node->setState(State::BLACK);
+	}
+  else if(dmin <= radius2){
+    node->setState(State::GRAY);
+  }
+  else{
+    node->setState(State::WHITE);
+  }
 }
 
 
 void Sphere::setRadius(double rad){
-    radius = rad;
+  this->radius = rad;
 }
 
 void Sphere::setCenter(Point3 &center){
-    this->center = center;
+  this->center = center;
 }
 
 double Sphere::getRadius(){
-    return radius;
+  return radius;
 }
 
-Point3* Sphere::getCenter(){
-    return &center;
+Point3 Sphere::getCenter(){
+   return center;
+}
+
+double Sphere::dMax(){
+  return 2.0*radius;
 }

@@ -6,17 +6,14 @@
 class Block: public Solid{
 	public:
     Block();
-    Block(Point3 tlb, Point3 brf);
+    Block(Point3 p_min, double size_x,double size_y,double size_z);
 		void classify(Node * node);
-
-		void setTLB(Point3 & tlb);
-		void setBRF(Point3 & brf);
-		Point3 & getTLB();
-		Point3 & getBRF();
+		double dMax();
+		Point3 getCenter();
 	private:
-			double side;
-			Point3 top_left_back;
-      Point3 bottom_right_front;
+			double side_x;
+			double side_y;
+			double side_z;
 };
 
-#endif
+#endif // BLOCK_H

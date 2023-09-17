@@ -1,0 +1,3 @@
+/home/mateus/modelagem/modelagem-geometrica/build/CMakeFiles/decompModeling.dir
+/home/mateus/modelagem/modelagem-geometrica/build/CMakeFiles/edit_cache.dir
+/home/mateus/modelagem/modelagem-geometrica/build/CMakeFiles/rebuild_cache.dir
