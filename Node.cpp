@@ -9,9 +9,13 @@ Node::Node(Node * parent, Box * box) : parent(parent), box(box) {
 }
 
 Node::~Node(){
+  std::cout<<"Calling Node Destructor\n";
+  std::cout<< "Children size: "<< children.size() <<"\n";
   for(int i = 0;i < children.size();++i){
+    std::cout<<"deleting child\n";
     delete children[i];
   }
+  //delete[] children;
   delete box;
 }
 

@@ -5,6 +5,7 @@ OctTree::OctTree() : solid(nullptr),root(nullptr) {}
 OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), solid(nullptr), root(nullptr){}
 
 OctTree::~OctTree() {
+  std::cout<<"Calling octtree destructor\n";
   delete root;
   delete solid;
 }
@@ -26,7 +27,7 @@ void OctTree::initOctTree(){
 
 void OctTree::makeOctTree(Node * child, int depth) {
   Node* root = child;
-  std::cout<<"=====current depth is "<< depth <<"==========\n";
+  // std::cout<<"=====current depth is "<< depth <<"==========\n";
   root->setState(State::BLACK);
   std::cout<<"setState done\n";
   if (depth>1){
@@ -75,7 +76,8 @@ void OctTree::calcBox(Node* node, Point3 TLB, Point3 BRF, uint8_t depth) {
   }
 
   divideBox(TLB, BRF, new_TLB, new_BRF, depth);
-  std::cout<<"divideBox done at depth = "<<depth<<"\n";
+  std::cout<<"divideBox done\n";
+  //std::cout<<"divideBox done at depth = "<<depth<<"\n";
   calcBox(node, new_TLB, BRF, depth-1);
   calcBox(node, TLB, new_BRF, depth-1);
 }
