@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/mateus/modelagem/modelagem-geometrica/Box.cpp" "CMakeFiles/decompModeling.dir/Box.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/Box.cpp.o.d"
   "/home/mateus/modelagem/modelagem-geometrica/Node.cpp" "CMakeFiles/decompModeling.dir/Node.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/Node.cpp.o.d"
   "/home/mateus/modelagem/modelagem-geometrica/OctTree.cpp" "CMakeFiles/decompModeling.dir/OctTree.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/OctTree.cpp.o.d"
+  "/home/mateus/modelagem/modelagem-geometrica/Sphere.cpp" "CMakeFiles/decompModeling.dir/Sphere.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/Sphere.cpp.o.d"
   "/home/mateus/modelagem/modelagem-geometrica/TestSolid.cpp" "CMakeFiles/decompModeling.dir/TestSolid.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/TestSolid.cpp.o.d"
   "/home/mateus/modelagem/modelagem-geometrica/main.cpp" "CMakeFiles/decompModeling.dir/main.cpp.o" "gcc" "CMakeFiles/decompModeling.dir/main.cpp.o.d"
   )

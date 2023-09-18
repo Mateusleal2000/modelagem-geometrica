@@ -7,10 +7,10 @@
 class Sphere: public Solid{
 	public:
 		Sphere();
-		Sphere(double rad, Point3 & center);
+		Sphere(double rad, Point3 center);
 		void classify(Node * node) override;
 		void setRadius(double rad);
-		void setCenter(Point3 & center);
+		void setCenter(Point3  center);
 		double getRadius();
 		Point3 getCenter() override;
 		double dMax() override;

@@ -201,6 +201,30 @@ OctTree.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/decompModeling.dir/build.make CMakeFiles/decompModeling.dir/OctTree.cpp.s
 .PHONY : OctTree.cpp.s
 
+Sphere.o: Sphere.cpp.o
+.PHONY : Sphere.o
+
+# target to build an object file
+Sphere.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/decompModeling.dir/build.make CMakeFiles/decompModeling.dir/Sphere.cpp.o
+.PHONY : Sphere.cpp.o
+
+Sphere.i: Sphere.cpp.i
+.PHONY : Sphere.i
+
+# target to preprocess a source file
+Sphere.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/decompModeling.dir/build.make CMakeFiles/decompModeling.dir/Sphere.cpp.i
+.PHONY : Sphere.cpp.i
+
+Sphere.s: Sphere.cpp.s
+.PHONY : Sphere.s
+
+# target to generate assembly for a file
+Sphere.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/decompModeling.dir/build.make CMakeFiles/decompModeling.dir/Sphere.cpp.s
+.PHONY : Sphere.cpp.s
+
 TestSolid.o: TestSolid.cpp.o
 .PHONY : TestSolid.o
 
@@ -267,6 +291,9 @@ help:
 	@echo "... OctTree.o"
 	@echo "... OctTree.i"
 	@echo "... OctTree.s"
+	@echo "... Sphere.o"
+	@echo "... Sphere.i"
+	@echo "... Sphere.s"
 	@echo "... TestSolid.o"
 	@echo "... TestSolid.i"
 	@echo "... TestSolid.s"

@@ -3,7 +3,7 @@
 #include <math.h>
 
 
-Sphere::Sphere(double rad, Point3 & center): radius(rad), center(center){
+Sphere::Sphere(double rad, Point3 center): radius(rad), center(center){
 }
 
 /*
@@ -33,13 +33,15 @@ void Sphere::classify(Node * node){
 	double dmax = 0;
 
   for(int i = 0; i<3; i++){
-		double a = center[i] - getBmin(i);
-		double b = center[i] - getBmax(i);
-		if(center[i] < getBmin(i)){
+    double min = node->getBox()->getBmin(i);
+    double max = node->getBox()->getBmax(i);
+		double a = center[i] - min;
+		double b = center[i] - max;
+		if(center[i] < min){
 			dmin += (a*a);
 
 		}
-		else if(center[i] > getBmax(i)){
+		else if(center[i] > node->getBox()->getBmax(i)){
 			dmin += (b*b);
 		}
 		// dmin = std::min(a*a, b*b)
@@ -62,7 +64,7 @@ void Sphere::setRadius(double rad){
   this->radius = rad;
 }
 
-void Sphere::setCenter(Point3 &center){
+void Sphere::setCenter(Point3 center){
   this->center = center;
 }
 

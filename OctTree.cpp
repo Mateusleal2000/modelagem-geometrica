@@ -1,11 +1,13 @@
 #include "OctTree.hpp"
 
+#include <iomanip>
+#include <fstream>
+
 OctTree::OctTree() : solid(nullptr),root(nullptr) {}
 
 OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), solid(nullptr), root(nullptr){}
 
 OctTree::~OctTree() {
-  std::cout<<"Calling octtree destructor\n";
   delete root;
   delete solid;
 }
@@ -20,9 +22,9 @@ void OctTree::initOctTree(){
 
   Box * box = new Box(TLB,BRF);
   root = new Node(nullptr,box);
-  std::cout<<"entering makeOctTree\n";
+  // std::cout<<"entering makeOctTree\n";
   makeOctTree(root,maxDepth);
-  std::cout<<"exiting makeOctTree within initOctTree\n";
+  // std::cout<<"exiting makeOctTree within initOctTree\n";
   printOctTree(root);
 }
 
@@ -30,22 +32,22 @@ void OctTree::makeOctTree(Node * child, int depth) {
   Node* root = child;
   // std::cout<<"=====current depth is "<< depth <<"==========\n";
   root->setState(State::BLACK);
-  std::cout<<"setState done\n";
+  // std::cout<<"setState done\n";
   if (depth>1){
     solid->classify(root);
-    std::cout<<"classify done\n"; 
+    // std::cout<<"classify done\n"; 
     if (root->getState()==State::GRAY){
       subdivide(root);
-      std::cout<<"subdivide done\n";
-      std::cout<<"==//====//====//==";
-      std::cout<<"doing 8 children";
-      std::cout<<"==//====//====//==\n";
+      // std::cout<<"subdivide done\n";
+      // std::cout<<"==//====//====//==";
+      // std::cout<<"doing 8 children";
+      // std::cout<<"==//====//====//==\n";
       for (int i=0; i<8; i++){
         makeOctTree(root->getChild(i), depth-1);
       }
-      std::cout<<"==//====//====//==";
-      std::cout<<"8 children done";
-      std::cout<<"==//====//====//==\n";
+      // std::cout<<"==//====//====//==";
+      // std::cout<<"8 children done";
+      // std::cout<<"==//====//====//==\n";
     }
   }
 }
@@ -97,12 +99,29 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 void OctTree::printOctTree(Node * node){
   Point3 tlb = node->getBox()->getTLB();
   Point3 brf = node->getBox()->getBRF();
-  std::cout << "(" << tlb.x() << "," << tlb.y() << "," << tlb.z() << ")" << ","; 
-  std::cout<<"(" << brf.x() << "," << brf.y() << "," << brf.z() << ")" << ",";
+  std::ofstream MyFile("sphere.txt", std::ios::app);
+  if(node->getState() == State::BLACK){
+    MyFile << std::setprecision(4) << "v  " << tlb.x() << " " << tlb.y() << " " << tlb.z() << "\n"; 
+    MyFile << std::setprecision(4) << "v  " << brf.x() << " " << brf.y() << " " << brf.z() << "\n";
+  }
   if(node->getState() != State::GRAY){
     return;
   }
   for(int i = 0;i<8;i++){
     printOctTree(node->getChild(i));
+
   }
 }
+
+// void OctTree::writeOctTreeToFile(Node * node, std::ofstream OUTFILE){
+//   Point3 tlb = node->getBox()->getTLB();
+//   Point3 brf = node->getBox()->getBRF();
+//   OUTFILE << "v " << tlb.x() << " " << tlb.y() << " " << tlb.z() << std::endl; 
+//   OUTFILE << "v " << brf.x() << " " << brf.y() << " " << brf.z() << "\n";
+//   if(node->getState() != State::GRAY){
+//     return;
+//   }
+//   for(int i = 0;i<8;i++){
+//     writeOctTreeToFile(node->getChild(i), OUTFILE);
+//   }
+// }
