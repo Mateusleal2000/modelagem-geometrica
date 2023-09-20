@@ -99,7 +99,7 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 void OctTree::printOctTree(Node * node){
   Point3 tlb = node->getBox()->getTLB();
   Point3 brf = node->getBox()->getBRF();
-  std::ofstream MyFile("sphere.txt", std::ios::app);
+  std::ofstream MyFile("sphere.obj", std::ios::app);
   if(node->getState() == State::BLACK){
     MyFile << std::setprecision(4) << "v  " << tlb.x() << " " << tlb.y() << " " << tlb.z() << "\n"; 
     MyFile << std::setprecision(4) << "v  " << brf.x() << " " << brf.y() << " " << brf.z() << "\n";
