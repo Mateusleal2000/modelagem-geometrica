@@ -1,9 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
 
-project(imgEditor LANGUAGES CXX)
+
+include(CMakePrintHelpers)
 
 
-add_executable(decompModeling main.cpp Box.cpp Node.cpp OctTree.cpp TestSolid.cpp Sphere.cpp)
 
+project(modelagem LANGUAGES CXX)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui OpenGL OpenGLWidgets)
+
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+qt_add_executable(modelagem main.cpp Box.cpp Node.cpp OctTree.cpp TestSolid.cpp Sphere.cpp GLWidget.cpp)
+
+target_link_libraries(modelagem PRIVATE Qt6::Core Qt6::Gui Qt6::OpenGL Qt6::OpenGLWidgets)
 
