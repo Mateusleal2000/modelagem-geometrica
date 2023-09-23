@@ -1,3 +1,0 @@
-/home/dejiko/Repositories/ufc/modelagem-geometrica/build/CMakeFiles/decompModeling.dir
-/home/dejiko/Repositories/ufc/modelagem-geometrica/build/CMakeFiles/edit_cache.dir
-/home/dejiko/Repositories/ufc/modelagem-geometrica/build/CMakeFiles/rebuild_cache.dir

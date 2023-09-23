@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/decompModeling.dir/main.cpp.o CMakeFiles/decompModeling.dir/Box.cpp.o CMakeFiles/decompModeling.dir/Node.cpp.o CMakeFiles/decompModeling.dir/OctTree.cpp.o CMakeFiles/decompModeling.dir/TestSolid.cpp.o CMakeFiles/decompModeling.dir/Sphere.cpp.o -o decompModeling 
