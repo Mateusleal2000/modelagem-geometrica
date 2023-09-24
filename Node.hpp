@@ -3,6 +3,7 @@
 #include <vector>
 #include "vec3.hpp"
 #include "Box.hpp"
+#include <unordered_set>
 
 
 enum class State{
@@ -24,6 +25,9 @@ class Node{
     void setParent(Node * parent);
     void setChild(Node * child);
     void setBox(Box* box);
+    void setGlobalVertices(std::unordered_set<Point3> * globalVertices);
+    void deletePoints();
+    void mapPointsToIndex();
     double calcArea();
     double calcVolume();
     
@@ -45,6 +49,7 @@ class Node{
 		State state;
     Node * parent;
     Box * box;
+    std::unordered_set<Point3> * setOfPoints;
     std::vector<Node*> children;
 
 };

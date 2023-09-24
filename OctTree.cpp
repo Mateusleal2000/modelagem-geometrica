@@ -22,9 +22,8 @@ void OctTree::initOctTree(){
 
   Box * box = new Box(TLB,BRF);
   root = new Node(nullptr,box);
-  // std::cout<<"entering makeOctTree\n";
+  root->setGlobalVertices(globalVertices);
   makeOctTree(root,maxDepth);
-  // std::cout<<"exiting makeOctTree within initOctTree\n";
   printOctTree(root);
 }
 
@@ -55,7 +54,7 @@ void OctTree::makeOctTree(Node * child, int depth) {
 void OctTree::subdivide(Node * node) {
   
   Box *parentBox = node->getBox(); 
-  calcBox(node, parentBox->getTLB(), parentBox->getBRF(), 3);
+  calcBox(node, parentBox->getPoint(PointLabel::TLB), parentBox->getPoint(PointLabel::BRF), 3);
 
 }
 
@@ -72,8 +71,9 @@ void OctTree::calcBox(Node* node, Point3 TLB, Point3 BRF, uint8_t depth) {
   
   if(depth == 0){
     Box * box = new Box(TLB, BRF);
-    Node * child = new Node(node, box); 
+    Node * child = new Node(node, box);
     node->setChild(child);
+    child->setGlobalVertices(globalVertices);
     return;
   }
 
@@ -97,8 +97,8 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 }
 
 void OctTree::printOctTree(Node * node){
-  Point3 tlb = node->getBox()->getTLB();
-  Point3 brf = node->getBox()->getBRF();
+  Point3 tlb = node->getBox()->getPoint(PointLabel::TLB);
+  Point3 brf = node->getBox()->getPoint(PointLabel::BRF);
   std::ofstream MyFile("sphere.obj", std::ios::app);
   if(node->getState() == State::BLACK){
     MyFile << std::setprecision(4) << "v  " << tlb.x() << " " << tlb.y() << " " << tlb.z() << "\n"; 
@@ -114,8 +114,8 @@ void OctTree::printOctTree(Node * node){
 }
 
 // void OctTree::writeOctTreeToFile(Node * node, std::ofstream OUTFILE){
-//   Point3 tlb = node->getBox()->getTLB();
-//   Point3 brf = node->getBox()->getBRF();
+//   Point3 tlb = node->getBox()->getPoint(PointLabel::TLB);
+//   Point3 brf = node->getBox()->getPoint(PointLabel::BRF);
 //   OUTFILE << "v " << tlb.x() << " " << tlb.y() << " " << tlb.z() << std::endl; 
 //   OUTFILE << "v " << brf.x() << " " << brf.y() << " " << brf.z() << "\n";
 //   if(node->getState() != State::GRAY){

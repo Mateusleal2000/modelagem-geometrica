@@ -19,6 +19,26 @@ Node::~Node(){
 }
 
 
+void Node::setGlobalVertices(std::unordered_set<Point3> * globalVertices){
+  setOfPoints = globalVertices;
+  return;
+}
+
+void Node::mapPointsToIndex(){
+	for(int i = 0;i < 8;i++){
+		
+    std::unordered_set<Vec3>::iterator it = setOfPoints->find(box->getPoint(i));
+    int idx = std::distance(setOfPoints->begin(), it);
+    box->setIndex(i,idx);
+	}
+
+
+	for(Node * node : children){
+		node->mapPointsToIndex();
+	}
+}
+
+
 Node* Node::getChild(int index){
   return children[index];
 }
@@ -31,4 +51,8 @@ Node* Node::getParent(){
 
 Box * Node::getBox(){
 	return box;
+}
+
+void Node::deletePoints(){
+  delete setOfPoints;
 }

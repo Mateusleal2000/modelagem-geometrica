@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cstdint>
+#include <unordered_set>
 
 #include "Node.hpp"
 #include "Solid.hpp"
@@ -30,6 +31,7 @@ class OctTree{
 		Node * root;
 		int maxDepth;
 		Solid * solid;
+		std::unordered_set<Point3> * globalVertices;
 
 
 };
