@@ -100,23 +100,20 @@ void GLWidget::initializeGL()
 		QColor("#49eb34")};
 
 	m_projection = new QMatrix4x4(1, 0, 0, 0,
-							  0, 0.81, 0.5, 0,
-							  0, -0.5, 0.81, 0,
-							  0, 0, 0, 1);
+								  0, 0.81, 0.5, 0,
+								  0, -0.5, 0.81, 0,
+								  0, 0, 0, 1);
 
-	QMatrix4x4 *rot = new QMatrix4x4(0.81,0,0.5,0,
-																	0   ,1,0,0,
-																	-0.5,0,0.81,0,
-																	0,0,0,1);
-																	
+	QMatrix4x4 *rot = new QMatrix4x4(0.81, 0, 0.5, 0,
+									 0, 1, 0, 0,
+									 -0.5, 0, 0.81, 0,
+									 0, 0, 0, 1);
 
-
-	
 	int matrixLocation = m_program->uniformLocation("matrix");
 	int rotLocation = m_program->uniformLocation("rot");
-	std::cout<<matrixLocation<<"\n";
+	std::cout << matrixLocation << "\n";
 
-	std::cout<<rotLocation<<"\n";
+	std::cout << rotLocation << "\n";
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
 	std::vector<float> vertexBufferData(2 * 24 * 3);
@@ -175,7 +172,7 @@ void GLWidget::initializeGL()
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
-	//m_program->setUniformValue(matrixLocation, *m_projection);
+	// m_program->setUniformValue(matrixLocation, *m_projection);
 
 	m_program->setUniformValue(rotLocation, *rot);
 	m_program->setUniformValue(matrixLocation, *m_projection);
@@ -222,8 +219,9 @@ void GLWidget::paintGL()
 	m_vao.release();
 }
 
-void GLWidget::mousePressEvent(QMouseEvent * event){
+void GLWidget::mousePressEvent(QMouseEvent *event)
+{
 	*m_projection = 2 * (*m_projection);
-	std::cout<<"dadada\n";
+	std::cout << "dadada\n";
 	update();
 }
