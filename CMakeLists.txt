@@ -14,7 +14,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt_add_executable(modelagem main.cpp Box.cpp Node.cpp OctTree.cpp TestSolid.cpp Sphere.cpp GLWidget.cpp)
+qt_add_executable(modelagem main.cpp 
+                  Box.cpp 
+                  Node.cpp 
+                  OctTree.cpp 
+                  TestSolid.cpp 
+                  Sphere.cpp 
+                  GLWidget.cpp
+                  resources.qrc
+)
 
 target_link_libraries(modelagem PRIVATE Qt6::Core Qt6::Gui Qt6::OpenGL Qt6::OpenGLWidgets)
 
