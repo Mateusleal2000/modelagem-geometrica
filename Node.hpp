@@ -5,69 +5,76 @@
 #include "Box.hpp"
 #include <unordered_set>
 
-
-enum class State{
-    BLACK,
-    WHITE,
-    GRAY
+enum class State
+{
+  BLACK,
+  WHITE,
+  GRAY
 };
 
-class Node{
-	public:   
-		Node();
-    Node(Node * parent, Box * box);
-    ~Node();
-		State getState();
-		Node * getParent();
-		Node * getChild(int index);
-		Box * getBox();
-		void setState(State state);
-    void setParent(Node * parent);
-    void setChild(Node * child);
-    void setBox(Box* box);
-    void setGlobalVertices(std::unordered_set<Point3> * globalVertices);
-    void deletePoints();
-    void mapPointsToIndex();
-    double calcArea();
-    double calcVolume();
-    
-    
-  //operators  
-  public:  
-    Node & operator=(Node & n){
-			state = n.getState();
-			parent = n.getParent();
-			if(n.getState() == State::GRAY){
-			  for(int i = 0; i < 8; i++){
-          children[i] = n.getChild(i);
-        }
+class Node
+{
+public:
+  Node();
+  Node(Node *parent, Box *box);
+  ~Node();
+  State getState();
+  Node *getParent();
+  Node *getChild(int index);
+  Box *getBox();
+  void setState(State state);
+  void setParent(Node *parent);
+  void setChild(Node *child);
+  void setBox(Box *box);
+  void setGlobalVertices(std::unordered_set<Point3, MyHashFunction> *globalVertices);
+  void deletePoints();
+  void mapPointsToIndex();
+  void insertPointsIntoSet();
+  double calcArea();
+  double calcVolume();
+
+  // operators
+public:
+  Node &operator=(Node &n)
+  {
+    state = n.getState();
+    parent = n.getParent();
+    if (n.getState() == State::GRAY)
+    {
+      for (int i = 0; i < 8; i++)
+      {
+        children[i] = n.getChild(i);
       }
-      return *this;
     }
+    return *this;
+  }
 
-  private:
-		State state;
-    Node * parent;
-    Box * box;
-    std::unordered_set<Point3> * setOfPoints;
-    std::vector<Node*> children;
-
+private:
+  State state;
+  Node *parent;
+  Box *box;
+  std::unordered_set<Point3, MyHashFunction> *globalVertices;
+  std::vector<Node *> children;
 };
 
-inline void Node::setChild(Node * child){
-	this->children.emplace_back(child);
+inline void Node::setChild(Node *child)
+{
+  this->children.emplace_back(child);
 };
 
-inline void Node::setState(State state){
-	this->state = state;
+inline void Node::setState(State state)
+{
+  this->state = state;
 };
 
-inline void Node::setParent(Node * parent){
-	this->parent = parent;
+inline void Node::setParent(Node *parent)
+{
+  this->parent = parent;
 };
 
-inline void Node::setBox(Box * Box){
-	this->box = box;
+inline void Node::setBox(Box *Box)
+{
+  this->box = box;
 };
 
 #endif
