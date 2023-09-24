@@ -38,6 +38,8 @@ void GLWidget::initializeGL()
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
 
+	glUseProgram(m_program->programId());
+
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,
 		-0.5f, 0.5f, -0.5f,
@@ -97,17 +99,24 @@ void GLWidget::initializeGL()
 		QColor("#49eb34"),
 		QColor("#49eb34")};
 
-	m_projection = QMatrix4x4(0.3, 0, 0, 0,
-							  0, 0.3, 0, 0,
-							  0, 0, 0.3, 0,
+	m_projection = new QMatrix4x4(1, 0, 0, 0,
+							  0, 0.81, 0.5, 0,
+							  0, -0.5, 0.81, 0,
 							  0, 0, 0, 1);
 
-	QMatrix4x4 m = QMatrix4x4();
+	QMatrix4x4 *rot = new QMatrix4x4(0.81,0,0.5,0,
+																	0   ,1,0,0,
+																	-0.5,0,0.81,0,
+																	0,0,0,1);
+																	
+
+
+	
 	int matrixLocation = m_program->uniformLocation("matrix");
-	int samuelLocation = m_program->uniformLocation("samuel");
-	std::cout << matrixLocation << std::endl;
-	std::cout << samuelLocation << std::endl;
-	//
+	int rotLocation = m_program->uniformLocation("rot");
+	std::cout<<matrixLocation<<"\n";
+
+	std::cout<<rotLocation<<"\n";
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
 	std::vector<float> vertexBufferData(2 * 24 * 3);
@@ -140,12 +149,6 @@ void GLWidget::initializeGL()
 	m_vao.create();
 	m_vao.bind();
 
-	/*
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};*/
-
 	unsigned int indices[] = {// note that we start from 0!
 							  0, 1, 2,
 							  3, 4, 5,
@@ -172,8 +175,10 @@ void GLWidget::initializeGL()
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
-	// m_program->setUniformValue("matrix", m_projection);
-	// m_program->setUniformValue("samuel", m);
+	//m_program->setUniformValue(matrixLocation, *m_projection);
+
+	m_program->setUniformValue(rotLocation, *rot);
+	m_program->setUniformValue(matrixLocation, *m_projection);
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
@@ -189,8 +194,8 @@ void GLWidget::initializeGL()
 void GLWidget::resizeGL(int w, int h)
 {
 	// Update projection matrix and other size related settings:
-	m_projection.setToIdentity();
-	m_projection.perspective(45.0f, w / float(h), 0.01f, 100.0f);
+	m_projection->setToIdentity();
+	m_projection->perspective(45.0f, w / float(h), 0.01f, 100.0f);
 }
 
 void GLWidget::paintGL()
@@ -215,4 +220,10 @@ void GLWidget::paintGL()
 	glDrawArrays(GL_QUADS, 0, 24);
 	// finally release VAO again (not really necessary, just for completeness)
 	m_vao.release();
+}
+
+void GLWidget::mousePressEvent(QMouseEvent * event){
+	*m_projection = 2 * (*m_projection);
+	std::cout<<"dadada\n";
+	update();
 }

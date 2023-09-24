@@ -13,9 +13,10 @@ public:
 	void initializeGL() override;
 	void resizeGL(int w, int h) override;
 	void paintGL() override;
+	void mousePressEvent(QMouseEvent *event);
 
 private:
-	QMatrix4x4 m_projection;
+	QMatrix4x4 * m_projection;
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;
 	// Index buffer to draw two rectangles
