@@ -30,6 +30,8 @@ class OctTree{
 		Node * root;
 		int maxDepth;
 		Solid * solid;
+
+
 };
 
 

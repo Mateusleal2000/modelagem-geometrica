@@ -8,13 +8,10 @@ Box::Box(Point3 tlb, Point3 brf){
   bottom_right_front = brf;
 }
 
-Point3 & Box::getBRF(){
-  return bottom_right_front;
+Point3 Box::getPoint(int label){
+  return boxPoints[label];
 }
 
-Point3 & Box::getTLB(){
-  return top_left_back;
-}
 
 double Box::getBmin(int axis){
   double min = top_left_back[axis] <= bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];

@@ -1,27 +1,31 @@
 #include "vec3.hpp"
+#include <vector>
+
+enum class PointLabel{
+  TLB = 0,
+  BRF = 1,
+  TRB = 2,
+  BLF = 3,
+  BLB = 4,
+  TRF = 5,
+  TLF = 6,
+  BRB = 7
+};
+
 class Box{
   public:
 		Box();
 		Box(Point3 tlb, Point3 brf);
-		void setTLB(Point3 & tlb);
-		void setBRF(Point3 & brf);
-		Point3 & getTLB();
-		Point3 & getBRF();
+		void setPoint(int label, Point3 point);
+		Point3 getPoint(int label);
 		double getBmin(int axis);
 		double getBmax(int axis);
 	private:
-		Point3 top_left_back;
-		Point3 bottom_right_front;
-
-
+		std::vector<Point3> boxPoints;
+		std::vector<int> index;
 };
 
-
-inline void Box::setBRF(Point3 & brf){
-  this->bottom_right_front = brf;
+inline void Box::setPoint(int label, Point3 point){
+  this->boxPoints[label] = point;
 }
 
-
-inline void Box::setTLB(Point3 & tlb){
-  this->top_left_back = tlb;
-}

@@ -2,6 +2,8 @@
 #define VEC3_H
 #include <iostream>
 #include <cmath>
+// #include <bits/stdc++.h>
+#include <functional>
 
 class Vec3
 {
@@ -29,7 +31,7 @@ public:
     }
     double operator[](int i) const { return e[i]; }
     double &operator[](int i) { return e[i]; }
-
+    
     Vec3 &operator+=(const Vec3 &v)
     {
         e[0] += v[0];
@@ -59,6 +61,11 @@ public:
         e[1] *= 1.0f / d;
         e[2] *= 1.0f / d;
         return *this;
+    }
+
+    bool operator==(const Vec3 &v) const
+    {
+        return (e[0] == v[0] && e[1] == v[1] && e[2] == v[2]);
     }
 
     bool operator<(const Vec3 v) const
@@ -145,6 +152,18 @@ inline Vec3 normalize(const Vec3 &v)
     return Vec3(v.x() / bigger, v.y() / bigger, v.z() / bigger);
 }
 
+
+class MyHashFunction {
+public:
+ 
+    // We use predefined hash functions of strings
+    // and define our hash function as XOR of the
+    // hash values.
+    size_t operator()(const Vec3& p) const
+    {
+        return ((std::hash<float>()(p.x())) ^ (std::hash<float>()(p.y())) ^ (std::hash<float>()(p.z())));
+    }
+};
 using Point3 = Vec3;
 using RGBcolor = Vec3;
 
