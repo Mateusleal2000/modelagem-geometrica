@@ -13,7 +13,7 @@
 
 int main(int argc, char **argv)
 {
-  OctTree *oct = new OctTree(7);
+  OctTree *oct = new OctTree(8);
   Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
   oct->setSolid(sp);
   oct->initOctTree();
@@ -26,9 +26,8 @@ int main(int argc, char **argv)
   layout->addWidget(gl);
   w->setLayout(layout);
 
-  std::cout<<"assss\n";
+  std::cout << "assss\n";
   w->show();
-
 
   app.exec();
 

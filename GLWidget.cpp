@@ -1,5 +1,24 @@
 #include "GLWidget.hpp"
 #include <iostream>
+#include <fstream>
+#include <iomanip>
+
+void createIndexFile(std::vector<unsigned int> *indicesVector, std::vector<float> *verticesVector)
+{
+	std::ofstream MyFile("closeGL.obj", std::ios::app);
+
+	// ISSO AQUI GERA OS PONTOS
+	for (int i = 0; i < verticesVector->size(); i += 3)
+	{
+		MyFile << std::setprecision(4) << "v " << verticesVector->at(i) << " " << verticesVector->at(i + 1) << " " << verticesVector->at(i + 2) << "\n";
+	}
+
+	// ISSO AQUI GERA AS ARESTAS
+	for (int i = 0; i < indicesVector->size(); i += 2)
+	{
+		MyFile << "l " << indicesVector->at(i) << " " << indicesVector->at(i + 1) << "\n";
+	}
+}
 
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_shader(0)
 {
@@ -21,9 +40,9 @@ void GLWidget::initializeGL()
 	std::cout << glGetError() << std::endl;
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-std::cout << glGetError() << std::endl;
-	//glEnable(GL_NORMALIZE);
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
+	// glEnable(GL_NORMALIZE);
+	std::cout << glGetError() << std::endl;
 	// build and compile our shader program
 	// ------------------------------------
 
@@ -49,27 +68,24 @@ std::cout << glGetError() << std::endl;
 	// ------------------------------------------------------------------
 
 	glUseProgram(m_program->programId());
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
 	for (int i = 0; i < vv->size(); i++)
 	{
-		verticesVector->push_back(vv->at(i).x()/5.0);
-		verticesVector->push_back(vv->at(i).y()/5.0);
-		verticesVector->push_back(vv->at(i).z()/5.0);
+		verticesVector->push_back(vv->at(i).x() / 5.0);
+		verticesVector->push_back(vv->at(i).y() / 5.0);
+		verticesVector->push_back(vv->at(i).z() / 5.0);
 		colorVector->push_back(QColor("#49eb34"));
 	}
 
-
 	float *vertices = verticesVector->data();
 	QColor *vertexColors = colorVector->data();
-	
 
 	Node *root = octtree->getRoot();
 	treeWalk(root);
+	createIndexFile(indicesVector, verticesVector);
 
 	unsigned int *indices = indicesVector->data();
-
-
 
 	// percorre a arvore
 
@@ -172,19 +188,19 @@ std::cout << glGetError() << std::endl;
 	m_vbo.create();
 	std::cout << glGetError() << std::endl;
 	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	m_vbo.bind();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 
 	// now copy buffer data over: first argument pointer to data, second argument: size in bytes
 	m_vbo.allocate(vertexBufferData.data(), vertexBufferData.size() * sizeof(float));
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	// create and bind Vertex Array Object - must be bound *before* the element buffer is bound,
 	// because the VAO remembers and manages element buffers as well
 	m_vao.create();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	m_vao.bind();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	/*
 	unsigned int indices[] = {// note that we start from 0!
 							  0, 1, 2,
@@ -203,23 +219,22 @@ std::cout << glGetError() << std::endl;
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	m_indexBufferObject.bind();
-std::cout << glGetError() << std::endl;
-	//O segundo argumento deveria ser aquele mesmo???
-	m_indexBufferObject.allocate(indices, sizeof(indices)/*indicesVector->size()*/);
+	std::cout << glGetError() << std::endl;
+	// O segundo argumento deveria ser aquele mesmo???
+	m_indexBufferObject.allocate(indices, sizeof(indices) /*indicesVector->size()*/);
 
-	
-	//std::cout<<sizeof(indices) <<std::endl;
-	// stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
+	// std::cout<<sizeof(indices) <<std::endl;
+	//  stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
 	int stride = 6 * sizeof(float);
 
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
-std::cout << glGetError() << std::endl;
-	m_program->setAttributeBuffer(0, GL_FLOAT, 0,3, stride);
+	std::cout << glGetError() << std::endl;
+	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
 	std::cout << glGetError() << std::endl;
 	// m_program->setUniformValue(matrixLocation, *m_projection);
 
@@ -232,22 +247,22 @@ std::cout << glGetError() << std::endl;
 
 	int colorOffset = 3 * sizeof(float);
 	m_program->setAttributeBuffer(1, GL_FLOAT, colorOffset, 3, stride);
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	// Release (unbind) all
 
 	m_vbo.release();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 	m_vao.release();
-std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 }
 
 void GLWidget::resizeGL(int w, int h)
 {
 	// Update projection matrix and other size related settings:
-	std::cout<<"proj\n";
+	std::cout << "proj\n";
 	m_projection->setToIdentity();
 
-	std::cout<<"dps proj\n";
+	std::cout << "dps proj\n";
 	m_projection->perspective(45.0f, w / float(h), 0.01f, 100.0f);
 }
 
@@ -323,7 +338,6 @@ void GLWidget::treeWalk(Node *root)
 	{
 		treeWalk(root->getChild(i));
 	}
-
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
