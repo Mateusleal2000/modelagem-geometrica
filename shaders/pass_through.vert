@@ -25,8 +25,8 @@ out vec4 fragColor;
 //);
 
 //uniform mat4 matrix;
-uniform mat4 matrix;
-uniform mat4 rot;
+//uniform mat4 matrix;
+//uniform mat4 rot;
 void main() {
   //gl_Position = matrix * matrixz * vec4(position, 1.0);
   

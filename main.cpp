@@ -22,11 +22,13 @@ int main(int argc, char **argv)
   GLWidget *gl = new GLWidget(w);
   gl->setOctTree(oct);
   w->setFixedSize(640, 480);
-
   QHBoxLayout *layout = new QHBoxLayout(w);
   layout->addWidget(gl);
   w->setLayout(layout);
+
+  std::cout<<"assss\n";
   w->show();
+
 
   app.exec();
 

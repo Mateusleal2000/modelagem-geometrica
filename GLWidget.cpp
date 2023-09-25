@@ -6,20 +6,24 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_sha
 	verticesVector = new std::vector<float>();
 	indicesVector = new std::vector<unsigned int>();
 	colorVector = new std::vector<QColor>();
+	m_projection = new QMatrix4x4();
 }
 
 void GLWidget::initializeGL()
 {
 	// Set up the rendering context, load shaders and other resources, etc.:
 	initializeOpenGLFunctions();
+
 	// glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// this function is called once, when the window is first shown, i.e. when
 	// the the window content is first rendereds
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	std::cout << glGetError() << std::endl;
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-
+std::cout << glGetError() << std::endl;
+	//glEnable(GL_NORMALIZE);
+std::cout << glGetError() << std::endl;
 	// build and compile our shader program
 	// ------------------------------------
 
@@ -45,23 +49,27 @@ void GLWidget::initializeGL()
 	// ------------------------------------------------------------------
 
 	glUseProgram(m_program->programId());
+std::cout << glGetError() << std::endl;
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
 	for (int i = 0; i < vv->size(); i++)
 	{
-		verticesVector->push_back(vv->at(i).x());
-		verticesVector->push_back(vv->at(i).y());
-		verticesVector->push_back(vv->at(i).z());
-
+		verticesVector->push_back(vv->at(i).x()/5.0);
+		verticesVector->push_back(vv->at(i).y()/5.0);
+		verticesVector->push_back(vv->at(i).z()/5.0);
 		colorVector->push_back(QColor("#49eb34"));
 	}
 
+
 	float *vertices = verticesVector->data();
 	QColor *vertexColors = colorVector->data();
+	
 
 	Node *root = octtree->getRoot();
 	treeWalk(root);
 
 	unsigned int *indices = indicesVector->data();
+
+
 
 	// percorre a arvore
 
@@ -162,15 +170,21 @@ void GLWidget::initializeGL()
 	// create a new buffer for the vertices and colors, interleaved storage
 	m_vbo = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 	m_vbo.create();
+	std::cout << glGetError() << std::endl;
 	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+std::cout << glGetError() << std::endl;
 	m_vbo.bind();
+std::cout << glGetError() << std::endl;
 
 	// now copy buffer data over: first argument pointer to data, second argument: size in bytes
 	m_vbo.allocate(vertexBufferData.data(), vertexBufferData.size() * sizeof(float));
+std::cout << glGetError() << std::endl;
 	// create and bind Vertex Array Object - must be bound *before* the element buffer is bound,
 	// because the VAO remembers and manages element buffers as well
 	m_vao.create();
+std::cout << glGetError() << std::endl;
 	m_vao.bind();
+std::cout << glGetError() << std::endl;
 	/*
 	unsigned int indices[] = {// note that we start from 0!
 							  0, 1, 2,
@@ -189,15 +203,24 @@ void GLWidget::initializeGL()
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
+std::cout << glGetError() << std::endl;
 	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
+std::cout << glGetError() << std::endl;
 	m_indexBufferObject.bind();
-	m_indexBufferObject.allocate(indices, sizeof(indices));
+std::cout << glGetError() << std::endl;
+	//O segundo argumento deveria ser aquele mesmo???
+	m_indexBufferObject.allocate(indices, sizeof(indices)/*indicesVector->size()*/);
+
+	
+	//std::cout<<sizeof(indices) <<std::endl;
 	// stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
 	int stride = 6 * sizeof(float);
 
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
-	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
+std::cout << glGetError() << std::endl;
+	m_program->setAttributeBuffer(0, GL_FLOAT, 0,3, stride);
+	std::cout << glGetError() << std::endl;
 	// m_program->setUniformValue(matrixLocation, *m_projection);
 
 	// m_program->setUniformValue(rotLocation, *rot);
@@ -205,25 +228,33 @@ void GLWidget::initializeGL()
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
+	std::cout << glGetError() << std::endl;
 
 	int colorOffset = 3 * sizeof(float);
 	m_program->setAttributeBuffer(1, GL_FLOAT, colorOffset, 3, stride);
+std::cout << glGetError() << std::endl;
 	// Release (unbind) all
 
 	m_vbo.release();
+std::cout << glGetError() << std::endl;
 	m_vao.release();
+std::cout << glGetError() << std::endl;
 }
 
 void GLWidget::resizeGL(int w, int h)
 {
 	// Update projection matrix and other size related settings:
+	std::cout<<"proj\n";
 	m_projection->setToIdentity();
+
+	std::cout<<"dps proj\n";
 	m_projection->perspective(45.0f, w / float(h), 0.01f, 100.0f);
 }
 
 void GLWidget::paintGL()
 {
 	// set the background color = clear color
+
 	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -241,7 +272,7 @@ void GLWidget::paintGL()
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements
 	// glDrawArrays(GL_QUADS, 0, 24);
-	glDrawElements(GL_LINES, indicesVector->size(), GL_UNSIGNED_INT, indicesVector->data());
+	glDrawElements(GL_LINES, indicesVector->size(), GL_UNSIGNED_INT, 0);
 	// finally release VAO again (not really necessary, just for completeness)
 	m_vao.release();
 }
@@ -292,11 +323,12 @@ void GLWidget::treeWalk(Node *root)
 	{
 		treeWalk(root->getChild(i));
 	}
+
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-	*m_projection = 2 * (*m_projection);
+	//*m_projection = 2 * (*m_projection);
 	std::cout << "dadada\n";
 	update();
 }
