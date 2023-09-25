@@ -1,4 +1,6 @@
 #include "Node.hpp"
+#include <algorithm>
+#include <unistd.h>
 
 Node::Node() : parent(nullptr), box(nullptr)
 {
@@ -22,33 +24,57 @@ Node::~Node()
   delete box;
 }
 
-void Node::setGlobalVertices(std::unordered_set<Point3, MyHashFunction> *gV)
+void Node::setGlobalVerticesSet(std::set<Point3> *gvs)
 {
-  globalVertices = gV;
+  globalVerticesSet = gvs;
+  return;
+}
+
+void Node::setGlobalVerticesVector(std::vector<Point3> *gvv)
+{
+  globalVerticesVector = gvv;
   return;
 }
 
 void Node::mapPointsToIndex()
 {
+  // std::cout << "Entrou no mapPointsToIndex\n";
   for (int i = 0; i < 8; i++)
   {
-
-    std::unordered_set<Vec3>::iterator it = globalVertices->find(box->getPoint(i));
-    int idx = std::distance(globalVertices->begin(), it);
+    std::vector<Point3>::iterator it = std::lower_bound(globalVerticesVector->begin(), globalVerticesVector->end(), box->getPoint(i));
+    // std::vector<Point3>::iterator it = std::find(globalVerticesVector->begin(), globalVerticesVector->end(), box->getPoint(i));
+    int idx = std::distance(globalVerticesVector->begin(), it);
+    // std::cout << "index: " << idx << " of point: " << box->getPoint(i) << std::endl;
+    // sleep(2);
     box->setIndex(i, idx);
+  }
+
+  for (int j = 0; j < 8; j++)
+  {
+    Point3 p = box->getPoint(j);
+    int idx2 = box->getIndex(j);
+    if (!(globalVerticesVector->at(idx2) == p))
+    {
+      std::cout << "Diferente\n";
+    }
   }
 
   for (Node *node : children)
   {
     node->mapPointsToIndex();
   }
+  // std::cout << "Terminou o mapPointsToIndex\n";
 }
 
 void Node::insertPointsIntoSet()
 {
   for (int i = 0; i < 8; i++)
   {
-    globalVertices->insert(box->getPoint(i));
+    bool inserted = globalVerticesSet->insert(box->getPoint(i)).second;
+    if (inserted)
+    {
+      globalVerticesVector->push_back(box->getPoint(i));
+    }
   }
 }
 
@@ -70,7 +96,12 @@ Box *Node::getBox()
   return box;
 }
 
+unsigned int Node::getIndex(int i)
+{
+  return box->getIndex(i);
+}
+
 void Node::deletePoints()
 {
-  delete globalVertices;
+  delete globalVerticesSet;
 }

@@ -30,6 +30,6 @@ uniform mat4 rot;
 void main() {
   //gl_Position = matrix * matrixz * vec4(position, 1.0);
   
-  gl_Position = matrix * rot * vec4(position, 1.0);
+  gl_Position = vec4(position, 1.0);
   fragColor = vec4(color, 1.0);
 }

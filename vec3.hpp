@@ -31,7 +31,7 @@ public:
     }
     double operator[](int i) const { return e[i]; }
     double &operator[](int i) { return e[i]; }
-    
+
     Vec3 &operator+=(const Vec3 &v)
     {
         e[0] += v[0];
@@ -65,12 +65,22 @@ public:
 
     bool operator==(const Vec3 &v) const
     {
-        return (e[0] == v[0] && e[1] == v[1] && e[2] == v[2]);
+        return ((e[0] == v[0]) && (e[1] == v[1]) && (e[2] == v[2]));
     }
 
     bool operator<(const Vec3 v) const
+
     {
-        return e[0] < v.x() || (e[0] == v.x() && e[1] < v.y()) || (e[0] == v.x() && e[1] == v.y() && e[2] < v.z());
+        // return e[0] < v.x() || (e[0] == v.x() && e[1] < v.y()) || (e[0] == v.x() && e[1] == v.y() && e[2] < v.z());
+        if (e[0] != v.x())
+        {
+            return e[0] < v.x();
+        }
+        if (e[1] != v.y())
+        {
+            return e[1] < v.y();
+        }
+        return e[2] < v.z();
     }
 
     // bool operator>(Vec3 const &v)
@@ -152,14 +162,13 @@ inline Vec3 normalize(const Vec3 &v)
     return Vec3(v.x() / bigger, v.y() / bigger, v.z() / bigger);
 }
 
-
-class MyHashFunction {
+class MyHashFunction
+{
 public:
- 
     // We use predefined hash functions of strings
     // and define our hash function as XOR of the
     // hash values.
-    size_t operator()(const Vec3& p) const
+    size_t operator()(const Vec3 &p) const
     {
         return ((std::hash<float>()(p.x())) ^ (std::hash<float>()(p.y())) ^ (std::hash<float>()(p.z())));
     }

@@ -3,7 +3,7 @@
 #include <vector>
 #include "vec3.hpp"
 #include "Box.hpp"
-#include <unordered_set>
+#include <set>
 
 enum class State
 {
@@ -22,11 +22,13 @@ public:
   Node *getParent();
   Node *getChild(int index);
   Box *getBox();
+  unsigned int getIndex(int i);
   void setState(State state);
   void setParent(Node *parent);
   void setChild(Node *child);
   void setBox(Box *box);
-  void setGlobalVertices(std::unordered_set<Point3, MyHashFunction> *globalVertices);
+  void setGlobalVerticesSet(std::set<Point3> *globalVerticesSet);
+  void setGlobalVerticesVector(std::vector<Point3> *globalVerticesVector);
   void deletePoints();
   void mapPointsToIndex();
   void insertPointsIntoSet();
@@ -53,7 +55,8 @@ private:
   State state;
   Node *parent;
   Box *box;
-  std::unordered_set<Point3, MyHashFunction> *globalVertices;
+  std::set<Point3> *globalVerticesSet;
+  std::vector<Point3> *globalVerticesVector;
   std::vector<Node *> children;
 };
 

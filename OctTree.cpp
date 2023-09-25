@@ -7,7 +7,8 @@ OctTree::OctTree() : solid(nullptr), root(nullptr) {}
 
 OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), solid(nullptr), root(nullptr)
 {
-  globalVertices = new std::unordered_set<Point3, MyHashFunction>();
+  globalVerticesSet = new std::set<Point3>();
+  globalVerticesVector = new std::vector<Point3>();
 }
 
 OctTree::~OctTree()
@@ -29,9 +30,13 @@ void OctTree::initOctTree()
   Box *box = new Box(TLB, BRF);
   box->calcBoxPoints();
   root = new Node(nullptr, box);
-  root->setGlobalVertices(globalVertices);
+  root->setGlobalVerticesSet(globalVerticesSet);
+  root->setGlobalVerticesVector(globalVerticesVector);
   root->insertPointsIntoSet();
   makeOctTree(root, maxDepth);
+
+  std::sort(globalVerticesVector->begin(), globalVerticesVector->end());
+  root->mapPointsToIndex();
   printOctTree(root);
 }
 
@@ -70,6 +75,11 @@ int OctTree::getMaxDepth() const
   return maxDepth;
 }
 
+std::vector<Point3> *OctTree::getGlobalVerticesVector()
+{
+  return globalVerticesVector;
+}
+
 void OctTree::calcBox(Node *node, Point3 TLB, Point3 BRF, uint8_t depth)
 {
   Point3 new_TLB, new_BRF;
@@ -81,8 +91,10 @@ void OctTree::calcBox(Node *node, Point3 TLB, Point3 BRF, uint8_t depth)
 
     Node *child = new Node(node, box);
     node->setChild(child);
-    child->setGlobalVertices(globalVertices);
+    child->setGlobalVerticesSet(globalVerticesSet);
+    child->setGlobalVerticesVector(globalVerticesVector);
     child->insertPointsIntoSet();
+
     return;
   }
 
@@ -109,8 +121,8 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 void OctTree::printOctTree(Node *node)
 {
   std::ofstream MyFile("sphere.obj", std::ios::app);
-  std::unordered_set<Point3, MyHashFunction>::iterator itr;
-  for (itr = globalVertices->begin(); itr != globalVertices->end(); itr++)
+  std::set<Point3>::iterator itr;
+  for (itr = globalVerticesSet->begin(); itr != globalVerticesSet->end(); itr++)
   {
     MyFile << std::setprecision(4) << "v  " << itr->x() << " " << itr->y() << " " << itr->z() << "\n";
   }

@@ -1,7 +1,12 @@
 #include "GLWidget.hpp"
 #include <iostream>
 
-GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_shader(0) {}
+GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_shader(0)
+{
+	verticesVector = new std::vector<float>();
+	indicesVector = new std::vector<unsigned int>();
+	colorVector = new std::vector<QColor>();
+}
 
 void GLWidget::initializeGL()
 {
@@ -13,6 +18,7 @@ void GLWidget::initializeGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
 
 	// build and compile our shader program
 	// ------------------------------------
@@ -39,90 +45,110 @@ void GLWidget::initializeGL()
 	// ------------------------------------------------------------------
 
 	glUseProgram(m_program->programId());
+	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
+	for (int i = 0; i < vv->size(); i++)
+	{
+		verticesVector->push_back(vv->at(i).x());
+		verticesVector->push_back(vv->at(i).y());
+		verticesVector->push_back(vv->at(i).z());
 
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
+		colorVector->push_back(QColor("#49eb34"));
+	}
 
-		-0.5f, -0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
+	float *vertices = verticesVector->data();
+	QColor *vertexColors = colorVector->data();
 
-		0.5f, -0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
+	Node *root = octtree->getRoot();
+	treeWalk(root);
 
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, 0.5f, -0.5f,
-		-0.5f, 0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f,
+	unsigned int *indices = indicesVector->data();
 
-		-0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,
+	// percorre a arvore
 
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f
+	// float vertices[] = {
+	// 		-0.5f, -0.5f, -0.5f,
+	// 		-0.5f, 0.5f, -0.5f,
+	// 		0.5f, 0.5f, -0.5f,
+	// 		0.5f, -0.5f, -0.5f,
 
-	};
+	// 		-0.5f, -0.5f, 0.5f,
+	// 		-0.5f, 0.5f, 0.5f,
+	// 		0.5f, 0.5f, 0.5f,
+	// 		0.5f, -0.5f, 0.5f,
 
-	QColor vertexColors[] = {
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34"),
-		QColor("#49eb34")};
+	// 		0.5f, -0.5f, -0.5f,
+	// 		0.5f, 0.5f, -0.5f,
+	// 		0.5f, 0.5f, 0.5f,
+	// 		0.5f, -0.5f, 0.5f,
 
-	m_projection = new QMatrix4x4(1, 0, 0, 0,
-								  0, 0.81, 0.5, 0,
-								  0, -0.5, 0.81, 0,
-								  0, 0, 0, 1);
+	// 		-0.5f, -0.5f, -0.5f,
+	// 		-0.5f, 0.5f, -0.5f,
+	// 		-0.5f, 0.5f, 0.5f,
+	// 		-0.5f, -0.5f, 0.5f,
 
-	QMatrix4x4 *rot = new QMatrix4x4(0.81, 0, 0.5, 0,
-									 0, 1, 0, 0,
-									 -0.5, 0, 0.81, 0,
-									 0, 0, 0, 1);
+	// 		-0.5f, 0.5f, -0.5f,
+	// 		0.5f, 0.5f, -0.5f,
+	// 		0.5f, 0.5f, 0.5f,
+	// 		-0.5f, 0.5f, 0.5f,
 
-	int matrixLocation = m_program->uniformLocation("matrix");
-	int rotLocation = m_program->uniformLocation("rot");
-	std::cout << matrixLocation << "\n";
+	// 		-0.5f, -0.5f, -0.5f,
+	// 		0.5f, -0.5f, -0.5f,
+	// 		0.5f, -0.5f, 0.5f,
+	// 		-0.5f, -0.5f, 0.5f
 
-	std::cout << rotLocation << "\n";
+	// };
+
+	// QColor vertexColors[] = {
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34"),
+	// 		QColor("#49eb34")};
+
+	// m_projection = new QMatrix4x4(1, 0, 0, 0,
+	// 															0, 0.81, 0.5, 0,
+	// 															0, -0.5, 0.81, 0,
+	// 															0, 0, 0, 1);
+
+	// QMatrix4x4 *rot = new QMatrix4x4(0.81, 0, 0.5, 0,
+	// 																 0, 1, 0, 0,
+	// 																 -0.5, 0, 0.81, 0,
+	// 																 0, 0, 0, 1);
+
+	// int matrixLocation = m_program->uniformLocation("matrix");
+	// int rotLocation = m_program->uniformLocation("rot");
+	// std::cout << matrixLocation << "\n";
+
+	// std::cout << rotLocation << "\n";
+
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
-	std::vector<float> vertexBufferData(2 * 24 * 3);
+	std::vector<float> vertexBufferData(2 * vv->size() * 3);
 
 	// create new data buffer - the following memory copy stuff should
 	// be placed in some convenience class in later tutorials
 	// copy data in interleaved mode with pattern p0c0|p1c1|p2c2|p3c3
 	float *buf = vertexBufferData.data();
-	for (int v = 0; v < 24; ++v, buf += 6)
+	for (int v = 0; v < vv->size(); ++v, buf += 6)
 	{
 		// coordinates
 		buf[0] = vertices[3 * v];
@@ -145,7 +171,7 @@ void GLWidget::initializeGL()
 	// because the VAO remembers and manages element buffers as well
 	m_vao.create();
 	m_vao.bind();
-
+	/*
 	unsigned int indices[] = {// note that we start from 0!
 							  0, 1, 2,
 							  3, 4, 5,
@@ -159,13 +185,13 @@ void GLWidget::initializeGL()
 							  27, 28, 29,
 							  30, 31, 32,
 							  33, 34, 35};
-
+	*/
 	// create a new buffer for the indexes
-	//	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
-	//	m_indexBufferObject.create();
-	//	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	//	m_indexBufferObject.bind();
-	//	m_indexBufferObject.allocate(indices, sizeof(indices));
+	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
+	m_indexBufferObject.create();
+	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	m_indexBufferObject.bind();
+	m_indexBufferObject.allocate(indices, sizeof(indices));
 	// stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
 	int stride = 6 * sizeof(float);
 
@@ -174,8 +200,8 @@ void GLWidget::initializeGL()
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
 	// m_program->setUniformValue(matrixLocation, *m_projection);
 
-	m_program->setUniformValue(rotLocation, *rot);
-	m_program->setUniformValue(matrixLocation, *m_projection);
+	// m_program->setUniformValue(rotLocation, *rot);
+	// m_program->setUniformValue(matrixLocation, *m_projection);
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
@@ -214,9 +240,58 @@ void GLWidget::paintGL()
 
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements
-	glDrawArrays(GL_QUADS, 0, 24);
+	// glDrawArrays(GL_QUADS, 0, 24);
+	glDrawElements(GL_LINES, indicesVector->size(), GL_UNSIGNED_INT, indicesVector->data());
 	// finally release VAO again (not really necessary, just for completeness)
 	m_vao.release();
+}
+
+// Arestas
+// Face de Tras:
+// TLB-TRB , BLB-BRB, TLB-BLB, TRB-BRB
+// Face da Frente:
+// TLF-TRF , BLF-BRF, TLF-BLF, TRF-BRF
+// Arestas da Esquerda:
+// BLB-BLF, TLF-TLB
+// Face da Direita
+// BRB-BRF, TRF-TRB
+void GLWidget::treeWalk(Node *root)
+{
+	indicesVector->push_back(root->getIndex(PointLabel::TLB));
+	indicesVector->push_back(root->getIndex(PointLabel::TRB));
+	indicesVector->push_back(root->getIndex(PointLabel::BLB));
+	indicesVector->push_back(root->getIndex(PointLabel::BRB));
+	indicesVector->push_back(root->getIndex(PointLabel::TLB));
+	indicesVector->push_back(root->getIndex(PointLabel::BLB));
+	indicesVector->push_back(root->getIndex(PointLabel::TRB));
+	indicesVector->push_back(root->getIndex(PointLabel::BRB));
+
+	indicesVector->push_back(root->getIndex(PointLabel::TLF));
+	indicesVector->push_back(root->getIndex(PointLabel::TRF));
+	indicesVector->push_back(root->getIndex(PointLabel::BLF));
+	indicesVector->push_back(root->getIndex(PointLabel::BRF));
+	indicesVector->push_back(root->getIndex(PointLabel::TLF));
+	indicesVector->push_back(root->getIndex(PointLabel::BLF));
+	indicesVector->push_back(root->getIndex(PointLabel::TRF));
+	indicesVector->push_back(root->getIndex(PointLabel::BRF));
+
+	indicesVector->push_back(root->getIndex(PointLabel::BLB));
+	indicesVector->push_back(root->getIndex(PointLabel::BLF));
+	indicesVector->push_back(root->getIndex(PointLabel::TLF));
+	indicesVector->push_back(root->getIndex(PointLabel::TLB));
+	indicesVector->push_back(root->getIndex(PointLabel::BRB));
+	indicesVector->push_back(root->getIndex(PointLabel::BRF));
+	indicesVector->push_back(root->getIndex(PointLabel::TRF));
+	indicesVector->push_back(root->getIndex(PointLabel::TRB));
+
+	if (root->getState() != State::GRAY)
+	{
+		return;
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		treeWalk(root->getChild(i));
+	}
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -224,4 +299,9 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 	*m_projection = 2 * (*m_projection);
 	std::cout << "dadada\n";
 	update();
+}
+
+void GLWidget::setOctTree(OctTree *octtree)
+{
+	this->octtree = octtree;
 }

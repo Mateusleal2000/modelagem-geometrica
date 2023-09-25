@@ -3,7 +3,7 @@
 
 #include <string>
 #include <cstdint>
-#include <unordered_set>
+#include <set>
 
 #include "Node.hpp"
 #include "Solid.hpp"
@@ -21,6 +21,7 @@ public:
 	void setSolid(Solid *solid);
 	void setMaxDepth(int maxDepth);
 	double calcArea() const;
+	std::vector<Point3> *getGlobalVerticesVector();
 	double calcVolume() const;
 	void printOctTree(Node *node);
 
@@ -29,10 +30,12 @@ private:
 	void calcBox(Node *node, Point3 TLB, Point3 BRF, uint8_t depth);
 	void divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, Point3 &new_BRF, uint8_t depth);
 	void makeOctTree(Node *root, int depth);
+	void convertSetToVector();
 	Node *root;
 	int maxDepth;
 	Solid *solid;
-	std::unordered_set<Point3, MyHashFunction> *globalVertices;
+	std::set<Point3> *globalVerticesSet;
+	std::vector<Point3> *globalVerticesVector;
 };
 
 inline void OctTree::setRoot(Node *root)
@@ -48,6 +51,13 @@ inline void OctTree::setMaxDepth(int maxDepth)
 inline void OctTree::setSolid(Solid *solid)
 {
 	this->solid = solid;
+}
+
+inline void OctTree::convertSetToVector()
+{
+	if (globalVerticesVector != nullptr)
+		delete globalVerticesVector;
+	globalVerticesVector = new std::vector<Point3>(globalVerticesSet->begin(), globalVerticesSet->end());
 }
 
 #endif
