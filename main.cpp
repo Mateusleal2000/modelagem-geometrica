@@ -15,7 +15,7 @@
 
 int main(int argc, char **argv)
 {
-  OctTree *oct = new OctTree(5);
+  OctTree *oct = new OctTree(10);
   Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
   oct->setSolid(sp);
   oct->initOctTree();

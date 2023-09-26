@@ -74,7 +74,6 @@ void GLWidget::initializeGL()
 
 	glUseProgram(m_program->programId());
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
-	std::cout<< "size of vv " << vv->size() <<std::endl;
 	for (int i = 0; i < vv->size(); i++)
 	{
 		verticesVector->push_back(vv->at(i).x());
@@ -86,15 +85,11 @@ void GLWidget::initializeGL()
 	float *vertices = verticesVector->data();
 
 
-	std::cout<< "size of colorvector " << colorVector->size() <<std::endl;
 	QColor *vertexColors = colorVector->data();
 
-	std::cout<< "size of verticesvertor " << verticesVector->size() <<std::endl;
 	Node *root = octtree->getRoot();
-	std::cout<< "sizeofindicies "<<indicesVector->size()<<std::endl;
 	treeWalk(root);
 
-	std::cout<< "sizeofindicies after "<<indicesVector->size()<<std::endl;
 	createIndexFile(indicesVector, verticesVector);
 
 	unsigned int *indices = indicesVector->data();
@@ -140,9 +135,7 @@ void GLWidget::initializeGL()
 	m_vbo = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 	m_vbo.create();
 	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	std::cout << glGetError() << std::endl;
 	m_vbo.bind();
-	std::cout << glGetError() << std::endl;
 
 	// now copy buffer data over: first argument pointer to data, second argument: size in bytes
 	m_vbo.allocate(vertexBufferData.data(), vertexBufferData.size() * sizeof(float));
@@ -150,18 +143,13 @@ void GLWidget::initializeGL()
 	// create and bind Vertex Array Object - must be bound *before* the element buffer is bound,
 	// because the VAO remembers and manages element buffers as well
 	m_vao.create();
-	std::cout << glGetError() << std::endl;
 	m_vao.bind();
-	std::cout << glGetError() << std::endl;
 
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
-	std::cout << glGetError() << std::endl;
 	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	std::cout << glGetError() << std::endl;
 	m_indexBufferObject.bind();
-	std::cout << glGetError() << std::endl;
 	// O segundo argumento deveria ser aquele mesmo???
 	m_indexBufferObject.allocate(indices,  indicesVector->size()*sizeof(unsigned int));
 
@@ -171,9 +159,7 @@ void GLWidget::initializeGL()
 
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
-	std::cout << glGetError() << std::endl;
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
-	std::cout << glGetError() << std::endl;
 
 	m_program->setUniformValue(modelMatrixLocation, modelMatrix);
 	m_program->setUniformValue(viewMatrixLocation, viewMatrix);
@@ -184,22 +170,17 @@ void GLWidget::initializeGL()
 
 	int colorOffset = 3 * sizeof(float);
 	m_program->setAttributeBuffer(1, GL_FLOAT, colorOffset, 3, stride);
-	std::cout << glGetError() << std::endl;
 	// Release (unbind) all
 
 	m_vbo.release();
-	std::cout << glGetError() << std::endl;
 	m_vao.release();
-	std::cout << glGetError() << std::endl;
 }
 
 void GLWidget::resizeGL(int w, int h)
 {
 	// Update projection matrix and other size related settings:
-	std::cout << "proj\n";
 	m_projection->setToIdentity();
 
-	std::cout << "dps proj\n";
 	m_projection->perspective(45.0f, w / float(h), 0.01f, 100.0f);
 }
 
