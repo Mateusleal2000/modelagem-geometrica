@@ -21,6 +21,7 @@ qt_add_executable(modelagem main.cpp
                   TestSolid.cpp 
                   Sphere.cpp 
                   GLWidget.cpp
+                  testGL.cpp
                   resources.qrc
 )
 

@@ -68,7 +68,7 @@ public:
         return ((e[0] == v[0]) && (e[1] == v[1]) && (e[2] == v[2]));
     }
 
-    bool operator<(const Vec3 v) const
+    bool operator<(const Vec3& v) const
 
     {
         // return e[0] < v.x() || (e[0] == v.x() && e[1] < v.y()) || (e[0] == v.x() && e[1] == v.y() && e[2] < v.z());

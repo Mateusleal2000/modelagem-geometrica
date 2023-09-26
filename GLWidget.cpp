@@ -16,7 +16,7 @@ void createIndexFile(std::vector<unsigned int> *indicesVector, std::vector<float
 	// ISSO AQUI GERA AS ARESTAS
 	for (int i = 0; i < indicesVector->size(); i += 2)
 	{
-		MyFile << "l " << indicesVector->at(i) << " " << indicesVector->at(i + 1) << "\n";
+		MyFile << "l " << indicesVector->at(i)+1 << " " << indicesVector->at(i + 1)+1 << "\n";
 	}
 }
 
@@ -37,7 +37,6 @@ void GLWidget::initializeGL()
 	// this function is called once, when the window is first shown, i.e. when
 	// the the window content is first rendereds
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	std::cout << glGetError() << std::endl;
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	std::cout << glGetError() << std::endl;
@@ -72,9 +71,9 @@ void GLWidget::initializeGL()
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
 	for (int i = 0; i < vv->size(); i++)
 	{
-		verticesVector->push_back(vv->at(i).x() / 5.0);
-		verticesVector->push_back(vv->at(i).y() / 5.0);
-		verticesVector->push_back(vv->at(i).z() / 5.0);
+		verticesVector->push_back(vv->at(i).x());
+		verticesVector->push_back(vv->at(i).y());
+		verticesVector->push_back(vv->at(i).z());
 		colorVector->push_back(QColor("#49eb34"));
 	}
 
@@ -186,7 +185,6 @@ void GLWidget::initializeGL()
 	// create a new buffer for the vertices and colors, interleaved storage
 	m_vbo = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 	m_vbo.create();
-	std::cout << glGetError() << std::endl;
 	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	std::cout << glGetError() << std::endl;
 	m_vbo.bind();
@@ -243,7 +241,6 @@ void GLWidget::initializeGL()
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
-	std::cout << glGetError() << std::endl;
 
 	int colorOffset = 3 * sizeof(float);
 	m_program->setAttributeBuffer(1, GL_FLOAT, colorOffset, 3, stride);

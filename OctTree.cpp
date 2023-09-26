@@ -36,6 +36,13 @@ void OctTree::initOctTree()
   makeOctTree(root, maxDepth);
 
   std::sort(globalVerticesVector->begin(), globalVerticesVector->end());
+
+
+  //auto it = std::unique(globalVerticesVector->begin(), globalVerticesVector->end());
+  //bool wasUnique = (it == globalVerticesVector->end());
+  //if(wasUnique) std::cout<<"Was unique\n";
+
+
   root->mapPointsToIndex();
   printOctTree(root);
 }
@@ -121,8 +128,8 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 void OctTree::printOctTree(Node *node)
 {
   std::ofstream MyFile("sphere.obj", std::ios::app);
-  std::set<Point3>::iterator itr;
-  for (itr = globalVerticesSet->begin(); itr != globalVerticesSet->end(); itr++)
+  std::vector<Point3>::iterator itr;
+  for (itr = globalVerticesVector->begin(); itr != globalVerticesVector->end(); itr++)
   {
     MyFile << std::setprecision(4) << "v  " << itr->x() << " " << itr->y() << " " << itr->z() << "\n";
   }

@@ -24,12 +24,14 @@ out vec4 fragColor;
 //    vec4(0.0f, 0.0f, 0.0f, 1.0f)
 //);
 
-//uniform mat4 matrix;
-//uniform mat4 matrix;
-//uniform mat4 rot;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
 void main() {
   //gl_Position = matrix * matrixz * vec4(position, 1.0);
   
-  gl_Position = vec4(position, 1.0);
+  //gl_Position = matrix * vec4(position, 1.0);
+  
+  gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
   fragColor = vec4(color, 1.0);
 }
