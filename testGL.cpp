@@ -5,7 +5,7 @@
 testGL::testGL(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_shader(0)
 {
 	colorVector = new std::vector<QColor>();
-  m_projection = new QMatrix4x4();
+	m_projection = new QMatrix4x4();
 	m_projection->perspective(45.0f, 640.0 / float(480), 0.01f, 100.0f);
 }
 
@@ -20,12 +20,12 @@ void testGL::initializeGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-glEnable(GL_DEPTH_CLAMP);
-glEnable(GL_LINE_SMOOTH);
-   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	//glEnable(GL_NORMALIZE);
-	// build and compile our shader program
-	// ------------------------------------
+	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_LINE_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	// glEnable(GL_NORMALIZE);
+	//  build and compile our shader program
+	//  ------------------------------------
 
 	m_program = new QOpenGLShaderProgram();
 	if (!m_program->addShaderFromSourceFile(
@@ -49,63 +49,58 @@ glEnable(GL_LINE_SMOOTH);
 	// ------------------------------------------------------------------
 
 	glUseProgram(m_program->programId());
-  float vertices[] = {
-		//BACK
-  	 0.6f,  0.6f, -0.6f,  // top right
-  	 0.6f, -0.6f, -0.6f,  // bottom right
-  	-0.6f, -0.6f, -0.6f,  // bottom left
-  	-0.6f,  0.6f, -0.6f,   // top left
+	float vertices[] = {
+		// BACK
+		0.6f, 0.6f, -0.6f,	 // top right
+		0.6f, -0.6f, -0.6f,	 // bottom right
+		-0.6f, -0.6f, -0.6f, // bottom left
+		-0.6f, 0.6f, -0.6f,	 // top left
 
-    //FRONT
-  	 0.6f,  0.6f, 0.6f,  // top right
-  	 0.6f, -0.6f, 0.6f,  // bottom right
-  	-0.6f, -0.6f, 0.6f,  // bottom left
-  	-0.6f,  0.6f, 0.6f   // top left
-  };
+		// FRONT
+		0.6f, 0.6f, 0.6f,	// top right
+		0.6f, -0.6f, 0.6f,	// bottom right
+		-0.6f, -0.6f, 0.6f, // bottom left
+		-0.6f, 0.6f, 0.6f	// top left
+	};
 
+	QColor vertexColors[] = {
+		QColor("#f6a509"),
+		QColor("#cb2dde"),
+		QColor("#0eeed1"),
+		QColor("#068918"),
 
-  QColor vertexColors [] = {
-  	QColor("#f6a509"),
-  	QColor("#cb2dde"),
-  	QColor("#0eeed1"),
-  	QColor("#068918"),
+		QColor("#f6a509"),
+		QColor("#cb2dde"),
+		QColor("#0eeed1"),
+		QColor("#068918"),
+	};
 
+	QMatrix4x4 rotx = QMatrix4x4(1, 0, 0, 0,
+								 0, 0.81, -0.5, 0,
+								 0, 0.5, 0.81, 0,
+								 0, 0, 0, 1);
 
-  	QColor("#f6a509"),
-  	QColor("#cb2dde"),
-  	QColor("#0eeed1"),
-  	QColor("#068918"),
-  };
-
-
-
- QMatrix4x4 rotx = QMatrix4x4(1, 0, 0, 0,
- 															0, 0.81, -0.5, 0,
- 															0, 0.5, 0.81, 0,
- 															0, 0, 0, 1);
-
- QMatrix4x4 roty = QMatrix4x4(0.81, 0, 0.5, 0,
- 																 0, 1, 0, 0,
- 																 -0.5, 0, 0.81, 0,
- 																 0, 0, 0, 1);
+	QMatrix4x4 roty = QMatrix4x4(0.81, 0, 0.5, 0,
+								 0, 1, 0, 0,
+								 -0.5, 0, 0.81, 0,
+								 0, 0, 0, 1);
 
 	QMatrix4x4 viewMatrix;
-	viewMatrix.rotate(30,0,1,0);
+	// viewMatrix.rotate(30, 0, 1, 0);
 
-	viewMatrix.rotate(30,1,0,0);
-	viewMatrix.translate(0,3,40);
+	// viewMatrix.rotate(30, 1, 0, 0);
+	viewMatrix.translate(0, 0, 10);
 
 	viewMatrix = viewMatrix.inverted();
 
-
 	QMatrix4x4 modelMatrix; //= (rotx)*(roty);
 
-  int projectionpos = m_program->uniformLocation("projectionMatrix");
+	int projectionpos = m_program->uniformLocation("projectionMatrix");
 	int modelMatrixpos = m_program->uniformLocation("modelMatrix");
 	int viewMatrixpos = m_program->uniformLocation("viewMatrix");
-	//int rotxpos = m_program->uniformLocation("rotx");
-	//int rotypos = m_program->uniformLocation("roty");
-	
+	// int rotxpos = m_program->uniformLocation("rotx");
+	// int rotypos = m_program->uniformLocation("roty");
+
 	std::vector<float> vertexBufferData(2 * 8 * 3);
 
 	// create new data buffer - the following memory copy stuff should
@@ -136,48 +131,46 @@ glEnable(GL_LINE_SMOOTH);
 	m_vao.create();
 	m_vao.bind();
 
-  unsigned int indices[] = {  // note that we start from 0!
-  	//0, 1, 3,   // first triangle
-  	//1, 2, 3    // second triangle
-		0,1,
-		1,2,
-		2,3,
-		3,0,
+	unsigned int indices[] = {// note that we start from 0!
+							  // 0, 1, 3,   // first triangle
+							  // 1, 2, 3    // second triangle
+							  0, 1,
+							  1, 2,
+							  2, 3,
+							  3, 0,
 
-		4,5,
-		5,6,
-		6,7,
-		7,4,
+							  4, 5,
+							  5, 6,
+							  6, 7,
+							  7, 4,
 
-		0,4,
-		1,5,
-		2,6,
-		3,7
-  };
+							  0, 4,
+							  1, 5,
+							  2, 6,
+							  3, 7};
 
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
 	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	m_indexBufferObject.bind();
-	//O segundo argumento deveria ser aquele mesmo???
-	m_indexBufferObject.allocate(indices, sizeof(indices)/*indicesVector->size()*/);
+	// O segundo argumento deveria ser aquele mesmo???
+	m_indexBufferObject.allocate(indices, sizeof(indices) /*indicesVector->size()*/);
 
-	
 	// stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
 	int stride = 6 * sizeof(float);
 
 	// layout location 0 - vec3 with coordinates
 	m_program->enableAttributeArray(0);
-	m_program->setAttributeBuffer(0, GL_FLOAT, 0,3, stride);
-/*
-	m_program->setUniformValue(rotxpos, *rotx);
-	m_program->setUniformValue(rotypos,*roty);
+	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
+	/*
+		m_program->setUniformValue(rotxpos, *rotx);
+		m_program->setUniformValue(rotypos,*roty);
+		m_program->setUniformValue(projectionpos, *m_projection);
+	*/
+	m_program->setUniformValue(modelMatrixpos, modelMatrix);
+	m_program->setUniformValue(viewMatrixpos, viewMatrix);
 	m_program->setUniformValue(projectionpos, *m_projection);
-*/
-	m_program->setUniformValue(modelMatrixpos,modelMatrix);	
-	m_program->setUniformValue(viewMatrixpos,viewMatrix);
-	m_program->setUniformValue(projectionpos,*m_projection);
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
@@ -193,10 +186,10 @@ glEnable(GL_LINE_SMOOTH);
 void testGL::resizeGL(int w, int h)
 {
 	// Update projection matrix and other size related settings:
-	std::cout<<"proj\n";
+	std::cout << "proj\n";
 	m_projection->setToIdentity();
 
-	std::cout<<"dps proj\n";
+	std::cout << "dps proj\n";
 	m_projection->perspective(45.0f, w / float(h), 0.01f, 100.0f);
 }
 
@@ -204,8 +197,8 @@ void testGL::paintGL()
 {
 	// set the background color = clear color
 
- glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -238,4 +231,3 @@ void testGL::paintGL()
 // BLB-BLF, TLF-TLB
 // Face da Direita
 // BRB-BRF, TRF-TRB
-

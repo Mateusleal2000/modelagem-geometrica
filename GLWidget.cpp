@@ -16,7 +16,7 @@ void createIndexFile(std::vector<unsigned int> *indicesVector, std::vector<float
 	// ISSO AQUI GERA AS ARESTAS
 	for (int i = 0; i < indicesVector->size(); i += 2)
 	{
-		MyFile << "l " << indicesVector->at(i)+1 << " " << indicesVector->at(i + 1)+1 << "\n";
+		MyFile << "l " << indicesVector->at(i) + 1 << " " << indicesVector->at(i + 1) + 1 << "\n";
 	}
 }
 
@@ -26,6 +26,7 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_sha
 	indicesVector = new std::vector<unsigned int>();
 	colorVector = new std::vector<QColor>();
 	m_projection = new QMatrix4x4();
+	m_projection->perspective(45.0f, 640.0 / float(480), 0.01f, 100.0f);
 }
 
 void GLWidget::initializeGL()
@@ -39,9 +40,13 @@ void GLWidget::initializeGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-	std::cout << glGetError() << std::endl;
+	glEnable(GL_DEPTH_CLAMP);
+	glEnable(GL_LINE_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	// glEnable(GL_NORMALIZE);
-	std::cout << glGetError() << std::endl;
+	//  build and compile our shader program
+	//  ------------------------------------
+	// glEnable(GL_NORMALIZE);
 	// build and compile our shader program
 	// ------------------------------------
 
@@ -67,8 +72,8 @@ void GLWidget::initializeGL()
 	// ------------------------------------------------------------------
 
 	glUseProgram(m_program->programId());
-	std::cout << glGetError() << std::endl;
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
+	std::cout << vv->size() << std::endl;
 	for (int i = 0; i < vv->size(); i++)
 	{
 		verticesVector->push_back(vv->at(i).x());
@@ -86,82 +91,20 @@ void GLWidget::initializeGL()
 
 	unsigned int *indices = indicesVector->data();
 
-	// percorre a arvore
+	// Camera matrices creation
+	//-------------------------------------------
 
-	// float vertices[] = {
-	// 		-0.5f, -0.5f, -0.5f,
-	// 		-0.5f, 0.5f, -0.5f,
-	// 		0.5f, 0.5f, -0.5f,
-	// 		0.5f, -0.5f, -0.5f,
+	QMatrix4x4 viewMatrix;
+	// viewMatrix.rotate(30, 0, 1, 0);
+	viewMatrix.rotate(30, 1, 0, 0);
+	viewMatrix.translate(0, 3, 10);
+	viewMatrix = viewMatrix.inverted();
 
-	// 		-0.5f, -0.5f, 0.5f,
-	// 		-0.5f, 0.5f, 0.5f,
-	// 		0.5f, 0.5f, 0.5f,
-	// 		0.5f, -0.5f, 0.5f,
+	QMatrix4x4 modelMatrix;
 
-	// 		0.5f, -0.5f, -0.5f,
-	// 		0.5f, 0.5f, -0.5f,
-	// 		0.5f, 0.5f, 0.5f,
-	// 		0.5f, -0.5f, 0.5f,
-
-	// 		-0.5f, -0.5f, -0.5f,
-	// 		-0.5f, 0.5f, -0.5f,
-	// 		-0.5f, 0.5f, 0.5f,
-	// 		-0.5f, -0.5f, 0.5f,
-
-	// 		-0.5f, 0.5f, -0.5f,
-	// 		0.5f, 0.5f, -0.5f,
-	// 		0.5f, 0.5f, 0.5f,
-	// 		-0.5f, 0.5f, 0.5f,
-
-	// 		-0.5f, -0.5f, -0.5f,
-	// 		0.5f, -0.5f, -0.5f,
-	// 		0.5f, -0.5f, 0.5f,
-	// 		-0.5f, -0.5f, 0.5f
-
-	// };
-
-	// QColor vertexColors[] = {
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34"),
-	// 		QColor("#49eb34")};
-
-	// m_projection = new QMatrix4x4(1, 0, 0, 0,
-	// 															0, 0.81, 0.5, 0,
-	// 															0, -0.5, 0.81, 0,
-	// 															0, 0, 0, 1);
-
-	// QMatrix4x4 *rot = new QMatrix4x4(0.81, 0, 0.5, 0,
-	// 																 0, 1, 0, 0,
-	// 																 -0.5, 0, 0.81, 0,
-	// 																 0, 0, 0, 1);
-
-	// int matrixLocation = m_program->uniformLocation("matrix");
-	// int rotLocation = m_program->uniformLocation("rot");
-	// std::cout << matrixLocation << "\n";
-
-	// std::cout << rotLocation << "\n";
+	int projectionMatrixLocation = m_program->uniformLocation("projectionMatrix");
+	int modelMatrixLocation = m_program->uniformLocation("modelMatrix");
+	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
 
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
@@ -199,21 +142,7 @@ void GLWidget::initializeGL()
 	std::cout << glGetError() << std::endl;
 	m_vao.bind();
 	std::cout << glGetError() << std::endl;
-	/*
-	unsigned int indices[] = {// note that we start from 0!
-							  0, 1, 2,
-							  3, 4, 5,
-							  6, 7, 8,
-							  9, 10, 11,
-							  12, 13, 14,
-							  15, 16, 17,
-							  18, 19, 20,
-							  21, 22, 23,
-							  24, 25, 26,
-							  27, 28, 29,
-							  30, 31, 32,
-							  33, 34, 35};
-	*/
+
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
@@ -234,10 +163,10 @@ void GLWidget::initializeGL()
 	std::cout << glGetError() << std::endl;
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
 	std::cout << glGetError() << std::endl;
-	// m_program->setUniformValue(matrixLocation, *m_projection);
 
-	// m_program->setUniformValue(rotLocation, *rot);
-	// m_program->setUniformValue(matrixLocation, *m_projection);
+	m_program->setUniformValue(modelMatrixLocation, modelMatrix);
+	m_program->setUniformValue(viewMatrixLocation, viewMatrix);
+	m_program->setUniformValue(projectionMatrixLocation, *m_projection);
 
 	// layout location 1 - vec3 with colors
 	m_program->enableAttributeArray(1);
@@ -267,6 +196,9 @@ void GLWidget::paintGL()
 {
 	// set the background color = clear color
 
+	// glEnable(GL_BLEND);
+	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -279,11 +211,12 @@ void GLWidget::paintGL()
 	m_vao.bind();
 	// For old Intel drivers you may need to explicitely re-bind the index buffer, because
 	// these drivers do not remember the binding-state of the index/element-buffer in the VAO
-	//	m_indexBufferObject.bind();
+	// m_indexBufferObject.bind();
 
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements
 	// glDrawArrays(GL_QUADS, 0, 24);
+	std::cout << indicesVector->size() << std::endl;
 	glDrawElements(GL_LINES, indicesVector->size(), GL_UNSIGNED_INT, 0);
 	// finally release VAO again (not really necessary, just for completeness)
 	m_vao.release();
