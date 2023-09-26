@@ -15,7 +15,7 @@
 
 int main(int argc, char **argv)
 {
-  OctTree *oct = new OctTree(10);
+  OctTree *oct = new OctTree(3);
   Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
   oct->setSolid(sp);
   oct->initOctTree();
@@ -30,11 +30,9 @@ int main(int argc, char **argv)
   // layout->addWidget(tgl);
   w->setLayout(layout);
 
-  std::cout << "assss\n";
   w->show();
 
   app.exec();
 
-  std::cout << "Terminou\n";
   return 0;
 }

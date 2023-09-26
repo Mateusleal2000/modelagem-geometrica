@@ -114,7 +114,6 @@ void GLWidget::initializeGL()
 	// std::vector<float> vertexBufferData(2*4*3);
 	std::vector<float> vertexBufferData(2 * vv->size() * 3);
 
-	std::cout << vv->size() << std::endl;
 
 	// create new data buffer - the following memory copy stuff should
 	// be placed in some convenience class in later tutorials
@@ -139,7 +138,6 @@ void GLWidget::initializeGL()
 
 	// now copy buffer data over: first argument pointer to data, second argument: size in bytes
 	m_vbo.allocate(vertexBufferData.data(), vertexBufferData.size() * sizeof(float));
-	std::cout << glGetError() << std::endl;
 	// create and bind Vertex Array Object - must be bound *before* the element buffer is bound,
 	// because the VAO remembers and manages element buffers as well
 	m_vao.create();
@@ -208,7 +206,6 @@ void GLWidget::paintGL()
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements
 	// glDrawArrays(GL_QUADS, 0, 24);
-	std::cout << indicesVector->size() << std::endl;
 	glDrawElements(GL_LINES, indicesVector->size(), GL_UNSIGNED_INT, 0);
 	// finally release VAO again (not really necessary, just for completeness)
 	m_vao.release();
