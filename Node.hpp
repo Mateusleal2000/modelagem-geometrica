@@ -32,8 +32,8 @@ public:
   void deletePoints();
   void mapPointsToIndex();
   void insertPointsIntoSet();
-  double calcArea();
-  double calcVolume();
+  float calcArea();
+  float calcVolume();
 
   // operators
 public:

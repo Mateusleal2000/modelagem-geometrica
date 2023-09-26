@@ -51,6 +51,7 @@ void GLWidget::initializeGL()
 	// ------------------------------------
 
 	m_program = new QOpenGLShaderProgram();
+
 	if (!m_program->addShaderFromSourceFile(
 			QOpenGLShader::Vertex, ":/shaders/pass_through.vert"))
 	{
@@ -73,7 +74,7 @@ void GLWidget::initializeGL()
 
 	glUseProgram(m_program->programId());
 	std::vector<Point3> *vv = octtree->getGlobalVerticesVector();
-	std::cout << vv->size() << std::endl;
+	std::cout<< "size of vv " << vv->size() <<std::endl;
 	for (int i = 0; i < vv->size(); i++)
 	{
 		verticesVector->push_back(vv->at(i).x());
@@ -83,10 +84,17 @@ void GLWidget::initializeGL()
 	}
 
 	float *vertices = verticesVector->data();
+
+
+	std::cout<< "size of colorvector " << colorVector->size() <<std::endl;
 	QColor *vertexColors = colorVector->data();
 
+	std::cout<< "size of verticesvertor " << verticesVector->size() <<std::endl;
 	Node *root = octtree->getRoot();
+	std::cout<< "sizeofindicies "<<indicesVector->size()<<std::endl;
 	treeWalk(root);
+
+	std::cout<< "sizeofindicies after "<<indicesVector->size()<<std::endl;
 	createIndexFile(indicesVector, verticesVector);
 
 	unsigned int *indices = indicesVector->data();
@@ -96,11 +104,12 @@ void GLWidget::initializeGL()
 
 	QMatrix4x4 viewMatrix;
 	// viewMatrix.rotate(30, 0, 1, 0);
-	viewMatrix.rotate(30, 1, 0, 0);
-	viewMatrix.translate(0, 3, 10);
+	//viewMatrix.rotate(30, 1, 0, 0);
+	viewMatrix.translate(0, 0, 30);
 	viewMatrix = viewMatrix.inverted();
 
 	QMatrix4x4 modelMatrix;
+	//modelMatrix.rotate(45,0,0,1);
 
 	int projectionMatrixLocation = m_program->uniformLocation("projectionMatrix");
 	int modelMatrixLocation = m_program->uniformLocation("modelMatrix");
@@ -109,6 +118,8 @@ void GLWidget::initializeGL()
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
 	std::vector<float> vertexBufferData(2 * vv->size() * 3);
+
+	std::cout << vv->size() << std::endl;
 
 	// create new data buffer - the following memory copy stuff should
 	// be placed in some convenience class in later tutorials
@@ -152,7 +163,7 @@ void GLWidget::initializeGL()
 	m_indexBufferObject.bind();
 	std::cout << glGetError() << std::endl;
 	// O segundo argumento deveria ser aquele mesmo???
-	m_indexBufferObject.allocate(indices, sizeof(indices) /*indicesVector->size()*/);
+	m_indexBufferObject.allocate(indices,  indicesVector->size()*sizeof(unsigned int));
 
 	// std::cout<<sizeof(indices) <<std::endl;
 	//  stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
@@ -196,8 +207,8 @@ void GLWidget::paintGL()
 {
 	// set the background color = clear color
 
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -211,7 +222,7 @@ void GLWidget::paintGL()
 	m_vao.bind();
 	// For old Intel drivers you may need to explicitely re-bind the index buffer, because
 	// these drivers do not remember the binding-state of the index/element-buffer in the VAO
-	// m_indexBufferObject.bind();
+	//m_indexBufferObject.bind();
 
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements

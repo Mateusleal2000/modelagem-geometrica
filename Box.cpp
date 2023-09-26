@@ -30,19 +30,19 @@ unsigned int Box::getIndex(int index)
   return boxIndex.at(index);
 }
 
-double Box::getBmin(int axis)
+float Box::getBmin(int axis)
 {
   Point3 top_left_back = getPoint(PointLabel::TLB);
   Point3 bottom_right_front = getPoint(PointLabel::BRF);
-  double min = top_left_back[axis] <= bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
+  float min = top_left_back[axis] <= bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
   return min;
 }
 
-double Box::getBmax(int axis)
+float Box::getBmax(int axis)
 {
   Point3 top_left_back = getPoint(PointLabel::TLB);
   Point3 bottom_right_front = getPoint(PointLabel::BRF);
-  double max = top_left_back[axis] > bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
+  float max = top_left_back[axis] > bottom_right_front[axis] ? top_left_back[axis] : bottom_right_front[axis];
   return max;
 }
 

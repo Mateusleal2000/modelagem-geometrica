@@ -8,11 +8,11 @@
 class Vec3
 {
 private:
-    double e[3];
+    float e[3];
 
 public:
     Vec3() : e{0, 0, 0} {}
-    Vec3(double x, double y, double z) : e{x, y, z} {}
+    Vec3(float x, float y, float z) : e{x, y, z} {}
     ~Vec3() = default;
     Vec3 &operator=(const Vec3 &v)
     {
@@ -22,15 +22,15 @@ public:
         return *this;
     }
 
-    double x() const { return e[0]; }
-    double y() const { return e[1]; }
-    double z() const { return e[2]; }
+    float x() const { return e[0]; }
+    float y() const { return e[1]; }
+    float z() const { return e[2]; }
     Vec3 operator-() const
     {
         return Vec3(-e[0], -e[1], -e[2]);
     }
-    double operator[](int i) const { return e[i]; }
-    double &operator[](int i) { return e[i]; }
+    float operator[](int i) const { return e[i]; }
+    float &operator[](int i) { return e[i]; }
 
     Vec3 &operator+=(const Vec3 &v)
     {
@@ -47,7 +47,7 @@ public:
         return *this;
     }
 
-    Vec3 &operator*=(const double d)
+    Vec3 &operator*=(const float d)
     {
         e[0] *= d;
         e[1] *= d;
@@ -55,7 +55,7 @@ public:
         return *this;
     }
 
-    Vec3 &operator/=(const double d)
+    Vec3 &operator/=(const float d)
     {
         e[0] *= 1.0f / d;
         e[1] *= 1.0f / d;
@@ -88,7 +88,7 @@ public:
     //     return e[0] > v.x() || (e[0] == v.x() && e[1] > v.y()) || (e[0] == v.x() && e[1] == v.y() && e[2] > v.z());
     // }
 
-    double len() const { return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]); }
+    float len() const { return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]); }
 };
 
 inline std::ostream &operator<<(std::ostream &out, const Vec3 &v)
@@ -111,22 +111,22 @@ inline Vec3 operator*(const Vec3 &v0, const Vec3 &v1)
     return Vec3(v0[0] * v1[0], v0[1] * v1[1], v0[2] * v1[2]);
 }
 
-inline Vec3 operator*(const Vec3 &v, double t)
+inline Vec3 operator*(const Vec3 &v, float t)
 {
     return Vec3(v[0] * t, v[1] * t, v[2] * t);
 }
 
-inline Vec3 operator*(double t, const Vec3 &v)
+inline Vec3 operator*(float t, const Vec3 &v)
 {
     return Vec3(v[0] * t, v[1] * t, v[2] * t);
 }
 
-inline Vec3 operator/(const Vec3 &v, double t)
+inline Vec3 operator/(const Vec3 &v, float t)
 {
     return Vec3(v[0] / t, v[1] / t, v[2] / t);
 }
 
-inline double dot(const Vec3 &v0, const Vec3 &v1)
+inline float dot(const Vec3 &v0, const Vec3 &v1)
 {
     return v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2];
 }
@@ -145,7 +145,7 @@ inline Vec3 unit(const Vec3 &v)
 
 inline Vec3 normalize(const Vec3 &v)
 {
-    double bigger = -INFINITY;
+    float bigger = -INFINITY;
     if (v.x() > bigger)
     {
         bigger = v.x();

@@ -20,9 +20,9 @@ OctTree::~OctTree()
 
 void OctTree::initOctTree()
 {
-  double dmax = solid->dMax();
+  float dmax = solid->dMax();
   Point3 center = solid->getCenter();
-  double halfdMax = dmax / 2.0;
+  float halfdMax = dmax / 2.0;
   Point3 TLB = Point3(center.x() - halfdMax, center.y() + halfdMax, center.z() - halfdMax);
 
   Point3 BRF = Point3(center.x() + halfdMax, center.y() - halfdMax, center.z() + halfdMax);
@@ -117,7 +117,7 @@ void OctTree::calcBox(Node *node, Point3 TLB, Point3 BRF, uint8_t depth)
 void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, Point3 &new_BRF, uint8_t depth)
 {
   int coord = depth - 1;
-  double l = TLB[coord] - BRF[coord];
+  float l = TLB[coord] - BRF[coord];
   new_TLB = TLB;
   new_TLB[coord] = TLB[coord] - (l / 2.0);
 

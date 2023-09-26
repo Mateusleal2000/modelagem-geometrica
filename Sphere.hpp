@@ -8,16 +8,16 @@ class Sphere : public Solid
 {
 public:
 	Sphere();
-	Sphere(double rad, Point3 center);
+	Sphere(float rad, Point3 center);
 	void classify(Node *node) override;
-	void setRadius(double rad);
+	void setRadius(float rad);
 	void setCenter(Point3 center);
-	double getRadius();
+	float getRadius();
 	Point3 getCenter() override;
-	double dMax() override;
+	float dMax() override;
 
 private:
-	double radius;
+	float radius;
 	Point3 center;
 };
 

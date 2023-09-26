@@ -2,21 +2,21 @@
 #include <iostream>
 #include <math.h>
 
-Sphere::Sphere(double rad, Point3 center) : radius(rad), center(center)
+Sphere::Sphere(float rad, Point3 center) : radius(rad), center(center)
 {
 }
 
 void Sphere::classify(Node *node)
 {
-  double dmin = 0;
-  double dmax = 0;
+  float dmin = 0;
+  float dmax = 0;
 
   for (int i = 0; i < 3; i++)
   {
-    double min = node->getBox()->getBmin(i);
-    double max = node->getBox()->getBmax(i);
-    double a = center[i] - min;
-    double b = center[i] - max;
+    float min = node->getBox()->getBmin(i);
+    float max = node->getBox()->getBmax(i);
+    float a = center[i] - min;
+    float b = center[i] - max;
     if (center[i] < min)
     {
       dmin += (a * a);
@@ -28,7 +28,7 @@ void Sphere::classify(Node *node)
     // dmin = std::min(a*a, b*b)
     dmax += std::max(a * a, b * b);
   }
-  double radius2 = radius * radius;
+  float radius2 = radius * radius;
   if (dmax <= radius2)
   {
     node->setState(State::BLACK);
@@ -43,7 +43,7 @@ void Sphere::classify(Node *node)
   }
 }
 
-void Sphere::setRadius(double rad)
+void Sphere::setRadius(float rad)
 {
   this->radius = rad;
 }
@@ -53,7 +53,7 @@ void Sphere::setCenter(Point3 center)
   this->center = center;
 }
 
-double Sphere::getRadius()
+float Sphere::getRadius()
 {
   return radius;
 }
@@ -63,7 +63,7 @@ Point3 Sphere::getCenter()
   return center;
 }
 
-double Sphere::dMax()
+float Sphere::dMax()
 {
   return 2.0 * radius;
 }

@@ -9,7 +9,7 @@ void TestSolid::classify(Node * node){
   node->setState(State::GRAY);
 }
 
-double TestSolid::dMax(){
+float TestSolid::dMax(){
   return 5.0;
 }
 

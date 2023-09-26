@@ -7,7 +7,7 @@ class TestSolid : public Solid{
   TestSolid();
   ~TestSolid();
   void classify(Node * node) override;
-  double dMax() override;
+  float dMax() override;
   Point3 getCenter() override;
 };
 

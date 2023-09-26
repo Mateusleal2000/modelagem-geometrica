@@ -6,14 +6,14 @@
 class Block: public Solid{
 	public:
     Block();
-    Block(Point3 p_min, double size_x,double size_y,double size_z);
+    Block(Point3 p_min, float size_x,float size_y,float size_z);
 		void classify(Node * node);
-		double dMax();
+		float dMax();
 		Point3 getCenter();
 	private:
-			double side_x;
-			double side_y;
-			double side_z;
+			float side_x;
+			float side_y;
+			float side_z;
 };
 
 #endif // BLOCK_H

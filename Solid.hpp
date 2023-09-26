@@ -9,7 +9,7 @@ class Solid{
   public:
     virtual ~Solid(){}
     virtual void classify(Node * node) = 0;
-    virtual double dMax() = 0;
+    virtual float dMax() = 0;
     virtual Point3 getCenter() = 0;
     //virtual 
     void setColor(RGBcolor color);

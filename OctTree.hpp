@@ -20,9 +20,9 @@ public:
 	int getMaxDepth() const;
 	void setSolid(Solid *solid);
 	void setMaxDepth(int maxDepth);
-	double calcArea() const;
+	float calcArea() const;
 	std::vector<Point3> *getGlobalVerticesVector();
-	double calcVolume() const;
+	float calcVolume() const;
 	void printOctTree(Node *node);
 
 private:
