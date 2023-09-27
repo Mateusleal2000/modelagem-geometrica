@@ -12,8 +12,9 @@ public:
 	void setCenter(Point3 center);
 	Point3 getCenter() override;
 	float dMax() override;
-	bool checkTriangleIntersect(Triangle triangle, Box* box);
-	bool checkMembership(Box* box);
+	bool checkTriangleIntersect(Triangle triangle, Box *box);
+	bool checkMembership(Box *box);
+
 private:
 	void buildMesh();
 	void calculateCenter();
@@ -21,5 +22,6 @@ private:
 private:
 	Point3 center;
 	std::vector<Triangle> triangles;
+	std::vector<int> indices;
 	std::string fileName;
 };
