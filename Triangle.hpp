@@ -4,9 +4,8 @@ class Triangle
 {
 public:
 	Triangle(Point3 x, Point3 y, Point3 z);
-
+	Point3 getVertex(int idx);
+	void setVertex(Point3 v, int idx);
 private:
-	Point3 vertex1;
-	Point3 vertex2;
-	Point3 vertex3;
+	std::vector<Point3> vertices;
 };

@@ -58,3 +58,19 @@ void Box::calcBoxPoints()
     boxPoints[(i + 1) * 2 + 1][i] = tlb[i];
   }
 }
+
+Point3 Box::getCenter(){
+  return Point3({
+    (this->getPoint(PointLabel::TLB)[0] + this->getPoint(PointLabel::BRF)[0] )/2.0f, 
+    (this->getPoint(PointLabel::TLB)[1] + this->getPoint(PointLabel::BRF)[1] )/2.0f,
+    (this->getPoint(PointLabel::TLB)[2] + this->getPoint(PointLabel::BRF)[2] )/2.0f
+  });
+}
+
+Point3 Box::getExtent(){
+  return Point3({
+    fabs(this->getPoint(PointLabel::TLB)[0] - this->getPoint(PointLabel::BRF)[0] ), 
+    fabs(this->getPoint(PointLabel::TLB)[1] - this->getPoint(PointLabel::BRF)[1] ),
+    fabs(this->getPoint(PointLabel::TLB)[2] - this->getPoint(PointLabel::BRF)[2] )
+  });
+}

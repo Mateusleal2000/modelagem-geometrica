@@ -33,6 +33,8 @@ public:
   void setIndex(int label, int idx);
   Point3 &getPoint(int label);
   unsigned int getIndex(int idx);
+  Point3 getCenter();
+  Point3 getExtent();
   float getBmin(int axis);
   float getBmax(int axis);
   void calcBoxPoints();
