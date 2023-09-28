@@ -14,6 +14,7 @@ public:
 	float dMax() override;
 	bool checkTriangleIntersect(Triangle triangle, Box *box);
 	bool checkMembership(Box *box);
+	bool separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent);
 
 private:
 	void buildMesh();

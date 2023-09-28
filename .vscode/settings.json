@@ -64,6 +64,11 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "qapplication": "cpp"
+        "qapplication": "cpp",
+        "charconv": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "format": "cpp",
+        "span": "cpp"
     }
 }

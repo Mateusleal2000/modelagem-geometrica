@@ -1,53 +1,76 @@
-#include "Mesh.hpp"
-
-Mesh::Mesh(std::string fileName)
+#include "testTriangle.hpp"
+#include <string>
+testTriangle::testTriangle(/* args */)
 {
-	//buildMesh();
-	//calculateCenter();
+    double halfSize = 1.0; 
+
+		AABB = Box(Point3(0., 1., 0.), Point3(1., 0., 1.));
+		AABB.calcBoxPoints();
+
+		float offset = 0.5;
+		float scale = 100.;
+		Triangle testTriangle1 = Triangle(
+			Point3((scale*(-3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(0.))-offset, (scale*4.)-offset, (scale*0.)-offset)
+		);
+
+		offset = 0.;
+		scale = 1.;
+		Triangle testTriangle2 = Triangle(
+			Point3((scale*(-3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(0.))-offset, (scale*4.)-offset, (scale*0.)-offset)
+		);
+
+		offset = 0.;
+		scale = 1.;
+		Triangle testTriangle3 = Triangle(
+			Point3((scale*(0.1))-offset, (scale*0.1)-offset, (scale*0.5)-offset),
+			Point3((scale*(0.5))-offset, (scale*0.1)-offset, (scale*0.5)-offset),
+			Point3((scale*(0.1))-offset, (scale*0.5)-offset, (scale*0.5)-offset)
+		);
+
+		offset = 100;
+		scale = 1.;
+		Triangle testTriangle4 = Triangle(
+			Point3((scale*(-3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(3.))-offset, (scale*0.)-offset, (scale*0.)-offset),
+			Point3((scale*(0.))-offset, (scale*4.)-offset, (scale*0.)-offset)
+		);
+
+		triangles.push_back(testTriangle1);
+		triangles.push_back(testTriangle2);
+		triangles.push_back(testTriangle3);
+		triangles.push_back(testTriangle4);
 }
 
-void Mesh::classify(Node *node)
-{
-	bool found = false;
-	int i = 0;
-	while (!found && (i < triangles.size()))
-	{
-		found = checkTriangleIntersect(triangles[i], node->getBox());
-		i++;
+void testTriangle::testIntersection(){
+	std::vector<std::string> triangleNames({
+		"Really big triangle",
+		"Parcially intercepting triangle",
+		"Fully intercepting triangle",
+		"Non-intercepting triangle"}); 
+	for (int i=0; i < 8; i++){
+		std::cout << i << " " << AABB.getPoint(i);
 	}
-	if (found)
-	{
-		node->setState(State::GRAY);
+	for (int i=0; i < triangles.size(); i++){
+		std::cout << triangleNames[i]<< ": result is " << checkTriangleIntersect(triangles[i], &AABB) << std::endl;
 	}
-	else
-	{
-		bool inside = checkMembership(node->getBox());
-		inside ? node->setState(State::BLACK) : node->setState(State::WHITE);
+}
+
+void testTriangle::testIntersection(Box* box){
+	std::vector<std::string> triangleNames({
+		"Really big triangle",
+		"Parcially intercepting triangle",
+		"Fully intercepting triangle",
+		"Non-intercepting triangle"}); 
+	for (int i=0; i < triangles.size(); i++){
+		std::cout << triangleNames[i]<< ": result is " << checkTriangleIntersect(triangles[i], box) << std::endl;
 	}
-	return;
 }
 
-Point3 Mesh::getCenter()
-{
-	return Point3(0, 0, 0);
-}
-
-float Mesh::dMax()
-{
-	return 0.0;
-}
-
-void Mesh::setCenter(Point3 center)
-{
-	this->center = center;
-}
-
-void Mesh::buildMesh()
-{
-	return;
-}
-
-bool Mesh::checkTriangleIntersect(Triangle triangle, Box* box){
+bool testTriangle::checkTriangleIntersect(Triangle triangle, Box* box){
 	Point3 v0 = triangle.getVertex(0);
 	Point3 v1 = triangle.getVertex(1);
 	Point3 v2 = triangle.getVertex(2);
@@ -125,16 +148,8 @@ bool Mesh::checkTriangleIntersect(Triangle triangle, Box* box){
 	return true;
 }
 
-//Checar a existência de uma 
-bool Mesh::checkMembership(Box* box){
-	bool found = false;
 
-		/*TODO*/
-
-	return found;
-}
-
-bool Mesh::separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent){
+bool testTriangle::separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent){
     // Normals from the AABB's faces (need only 3).
     // Since it is centered at the origin in relation to the triangle
     // we can use the unit vectors for all 3 axis.

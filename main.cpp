@@ -12,13 +12,19 @@
 #include <QHBoxLayout>
 
 #include "testGL.hpp"
+// #include "testTriangle.hpp"
 
 int main(int argc, char **argv)
 {
+
+
   OctTree *oct = new OctTree(3);
   Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
+  //Sphere *sp = new Sphere(0.5, Point3(0.5, 0.5, 0.5));
   oct->setSolid(sp);
   oct->initOctTree();
+
+
   QApplication app(argc, argv);
   QWidget *w = new QWidget();
   GLWidget *gl = new GLWidget(w);

@@ -22,6 +22,9 @@ qt_add_executable(modelagem main.cpp
                   Sphere.cpp 
                   GLWidget.cpp
                   testGL.cpp
+                  Mesh.cpp
+                  Triangle.cpp
+                  testTriangle.cpp
                   resources.qrc
 )
 
