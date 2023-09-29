@@ -19,7 +19,9 @@ qt_add_executable(modelagem main.cpp
                   Node.cpp 
                   OctTree.cpp 
                   TestSolid.cpp 
-                  Sphere.cpp 
+                  Sphere.cpp
+                  Mesh.cpp
+                  Triangle.cpp
                   GLWidget.cpp
                   testGL.cpp
                   Mesh.cpp

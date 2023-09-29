@@ -2,6 +2,7 @@
 #include "Node.hpp"
 #include "TestSolid.hpp"
 #include "Sphere.hpp"
+#include "Mesh.hpp"
 #include "GLWidget.hpp"
 #include <iostream>
 #include <fstream>
@@ -17,13 +18,12 @@
 int main(int argc, char **argv)
 {
 
-
   OctTree *oct = new OctTree(3);
   Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
-  //Sphere *sp = new Sphere(0.5, Point3(0.5, 0.5, 0.5));
+  // Sphere *sp = new Sphere(0.5, Point3(0.5, 0.5, 0.5));
+  // Mesh m1("pontoObj.obj");
   oct->setSolid(sp);
   oct->initOctTree();
-
 
   QApplication app(argc, argv);
   QWidget *w = new QWidget();

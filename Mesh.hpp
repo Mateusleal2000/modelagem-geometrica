@@ -24,5 +24,6 @@ private:
 	Point3 center;
 	std::vector<Triangle> triangles;
 	std::vector<int> indices;
+	std::vector<Point3> vertices;
 	std::string fileName;
 };
