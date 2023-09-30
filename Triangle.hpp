@@ -3,10 +3,10 @@
 class Triangle
 {
 public:
-	Triangle(Point3 vertex1, Point3 vertex2, Point3 vertex3);
-	Point3 getVertex(int idx);
-	void setVertex(Point3 v, int idx);
+	Triangle(int index1, int index2, int index3);
+	int getIndex(int idx);
+	void setIndex(int i, int idx);
 
 private:
-	std::vector<Point3> vertices;
+	std::vector<int> indices;
 };

@@ -26,7 +26,7 @@ qt_add_executable(modelagem main.cpp
                   testGL.cpp
                   Mesh.cpp
                   Triangle.cpp
-                  testTriangle.cpp
+                  # testTriangle.cpp
                   resources.qrc
 )
 

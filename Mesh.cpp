@@ -1,12 +1,15 @@
 #include "Mesh.hpp"
 #include <iostream>
 #include <filesystem>
+#include <QString>
+#include <QDir>
 #include <fstream>
 #include <vector>
 #include <string>
 
 void getValues(const char &t, std::vector<float> *vec, std::string str)
 {
+
     if (t == 'v')
     {
 
@@ -15,7 +18,7 @@ void getValues(const char &t, std::vector<float> *vec, std::string str)
         int pos = 0;
         while (std::getline(ss, result, ' '))
         {
-            vec->at(pos) = std::stof(result);
+            vec->at(pos) = std::stof(result, 0);
             pos++;
         }
     }
@@ -24,14 +27,23 @@ void getValues(const char &t, std::vector<float> *vec, std::string str)
         std::stringstream ss(str);
         std::string result = "";
         int pos = 0;
+        int index = 0;
         while (std::getline(ss, result, ' '))
         {
             std::stringstream new_stream(result);
             std::string face;
             std::getline(new_stream, face, '/');
-            // std::cout << face << "\n";
-            // std::cout << pos << "\n";
-            vec->at(pos++) = std::stof(face);
+            vec->at(pos++) = std::stof(face) - 1;
+            // index = 0;
+            // while (std::getline(new_stream, face, '/'))
+            // {
+            //     if (index == 0 || index == 2)
+            //     {
+            //         // std::cout << face << "\n";
+            //         vec->at(pos++) = std::stof(face) - 1;
+            //     }
+            //     index++;
+            // }
         }
     }
 }
@@ -68,9 +80,19 @@ Point3 Mesh::getCenter()
     return Point3(0, 0, 0);
 }
 
+Point3 Mesh::getVertex(int idx)
+{
+    return this->vertices[idx];
+}
+
 float Mesh::dMax()
 {
     return 0.0;
+}
+
+std::vector<Triangle> Mesh::getTriangles()
+{
+    return this->triangles;
 }
 
 void Mesh::setCenter(Point3 center)
@@ -85,20 +107,27 @@ void Mesh::calculateCenter()
 
 void Mesh::buildMesh()
 {
-    std::string path = ":/objects/" + fileName;
-    std::string path2 = "/modelagem-geometrica/objects/pontoObj.obj";
+    // std::string path = ":/objects/" + fileName;
+    //  std::string path2 = "/modelagem-geometrica/objects/pontoObj.obj";
+    QDir dir(QDir::currentPath());
+    dir.cdUp();
+
+    QString path = dir.path();
+    std::cout << path.toStdString() << std::endl;
     std::string result = "";
     std::fstream myObj;
     // std::cout << path << "\n";
-    myObj.open(path, std::ios::in);
+    myObj.open(path.toStdString() + "/objects/" + fileName, std::ios::in);
+    std::cout << std::fixed;
+    std::cout << std::setprecision(4);
     if (myObj.is_open())
     {
         std::vector<float> points;
         std::vector<float> faces;
         points.reserve(3);
         points.resize(3);
-        faces.reserve(3);
-        faces.resize(3);
+        faces.reserve(6);
+        faces.resize(6);
         while (std::getline(myObj, result))
         {
             if (result[0] == 'v' && result[1] == ' ')
@@ -114,26 +143,36 @@ void Mesh::buildMesh()
                 indices.emplace_back(static_cast<int>(faces.at(0)));
                 indices.emplace_back(static_cast<int>(faces.at(1)));
                 indices.emplace_back(static_cast<int>(faces.at(2)));
+
+                // indices_normal.emplace_back(static_cast<int>(faces.at(1)));
+                // indices_normal.emplace_back(static_cast<int>(faces.at(3)));
+                // indices_normal.emplace_back(static_cast<int>(faces.at(5)));
             }
         }
     }
+    std::cout << "Vertices\n";
     for (int i = 0; i < vertices.size(); i++)
     {
         std::cout << vertices.at(i).x() << " " << vertices.at(i).y() << " " << vertices.at(i).z() << "\n";
     }
-
+    std::cout << "Indices\n";
     for (int i = 0; i < indices.size(); i += 3)
     {
         std::cout << indices.at(i) << " " << indices.at(i + 1) << " " << indices.at(i + 2) << "\n";
     }
+    // std::cout << "Normal Indices\n";
+    // for (int i = 0; i < indices_normal.size(); i += 3)
+    // {
+    //     std::cout << indices_normal.at(i) << " " << indices_normal.at(i + 1) << " " << indices_normal.at(i + 2) << "\n";
+    // }
     return;
 }
 
 bool Mesh::checkTriangleIntersect(Triangle triangle, Box *box)
 {
-    Point3 v0 = triangle.getVertex(0);
-    Point3 v1 = triangle.getVertex(1);
-    Point3 v2 = triangle.getVertex(2);
+    Point3 v0 = getVertex(triangle.getIndex(0));
+    Point3 v1 = getVertex(triangle.getIndex(1));
+    Point3 v2 = getVertex(triangle.getIndex(2));
 
     // necessário o centro e a extensão da caixa, ou seja, a dimensão em cada um dos eixos
     Point3 boxCenter = box->getCenter();
@@ -208,14 +247,56 @@ bool Mesh::checkTriangleIntersect(Triangle triangle, Box *box)
     return true;
 }
 
-// Checar a existência de uma
+// Checar se a box está no interior da mesh ou no exterior pelo algoritmo do tiro.
 bool Mesh::checkMembership(Box *box)
 {
-    bool found = false;
 
-    /*TODO*/
+    // int hits = 0;
+    // // achar as 3 normais do cubo
+    // std::vector<Point3> boxNormals;
+    // // checar se a normal e seu inverso intercepta algum triângulo
+    // for (Point3 normal : boxNormals)
+    // {
+    //     for (Triangle triangle : this->getTriangles())
+    //     {
+    //         hits += checkRayTriangleIntersect(normal, triangle) + checkRayTriangleIntersect(-normal, triangle);
+    //     }
+    // }
 
-    return found;
+    // if (hits = 6)
+    // {
+    //     return true;
+    // }
+    return false;
+}
+
+bool Mesh::checkRayTriangleIntersect(Point3 normal, Triangle triangle)
+{
+    // Plane intersection
+
+    Point3 A = getVertex(triangle.getIndex(0));
+    Point3 B = getVertex(triangle.getIndex(1));
+    Point3 C = getVertex(triangle.getIndex(2));
+
+    Vec3 AB = unit(B - A);
+    Vec3 AC = unit(C - A);
+
+    Vec3 triangleNormal = cross(AB, AC);
+    float dotprod = dot(triangleNormal, normal);
+    if (std::abs(dotprod) < 10e-5)
+    {
+        return false; // paralel to plane
+    }
+
+    Vec3 BC = unit(C - B);
+    Vec3 CA = unit(A - C);
+    // AB
+
+    Point3 Q =
+
+        // calcula o raio a partir da normal
+        // checa se há interseção com o triângulo
+        return 0;
 }
 
 bool Mesh::separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent)

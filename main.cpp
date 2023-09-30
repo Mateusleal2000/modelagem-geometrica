@@ -24,21 +24,28 @@ int main(int argc, char **argv)
   // Mesh m1("pontoObj.obj");
   oct->setSolid(sp);
   oct->initOctTree();
+  for (int j = 0; j < 8; j++)
+  {
+    for (int i = 0; i < 8; i++)
+    {
+      std::cout << i << ": " << oct->getRoot()->getChild(j)->getBox()->getPoint(i) << std::endl;
+    }
+  }
 
-  QApplication app(argc, argv);
-  QWidget *w = new QWidget();
-  GLWidget *gl = new GLWidget(w);
-  gl->setOctTree(oct);
-  // testGL *tgl = new testGL(w);
-  w->setFixedSize(640, 480);
-  QHBoxLayout *layout = new QHBoxLayout(w);
-  layout->addWidget(gl);
-  // layout->addWidget(tgl);
-  w->setLayout(layout);
+  // QApplication app(argc, argv);
+  // QWidget *w = new QWidget();
+  // GLWidget *gl = new GLWidget(w);
+  // gl->setOctTree(oct);
+  // // testGL *tgl = new testGL(w);
+  // w->setFixedSize(640, 480);
+  // QHBoxLayout *layout = new QHBoxLayout(w);
+  // layout->addWidget(gl);
+  // // layout->addWidget(tgl);
+  // w->setLayout(layout);
 
-  w->show();
+  // w->show();
 
-  app.exec();
+  // app.exec();
 
   return 0;
 }

@@ -1,5 +1,6 @@
 #include "vec3.hpp"
 #include <vector>
+#include <utility>
 
 // Grupo de 12 arestas, 2 a 2
 // Arestas
@@ -35,13 +36,17 @@ public:
   unsigned int getIndex(int idx);
   Point3 getCenter();
   Point3 getExtent();
+  Point3 getMax();
+  Point3 getMin();
   float getBmin(int axis);
   float getBmax(int axis);
   void calcBoxPoints();
+  void calcBoxNormals();
 
 private:
   std::vector<Point3> boxPoints;
   std::vector<int> boxIndex;
+  std::vector<Pair<Point3, Vec3>> normals;
 };
 
 inline void Box::setPoint(int label, Point3 point)

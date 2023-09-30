@@ -1,20 +1,20 @@
 #include "Triangle.hpp"
 
-Triangle::Triangle(Point3 vertex1, Point3 vertex2, Point3 vertex3)
+Triangle::Triangle(int index1, int index2, int index3)
 {
-  vertices.reserve(3);
-  vertices.resize(3);
-  vertices[0] = vertex1;
-  vertices[1] = vertex2;
-  vertices[2] = vertex3;
+  indices.reserve(3);
+  indices.resize(3);
+  indices[0] = index1;
+  indices[1] = index2;
+  indices[2] = index3;
 }
 
-Point3 Triangle::getVertex(int idx)
+int Triangle::getIndex(int idx)
 {
-  return this->vertices[idx];
+  return this->indices[idx];
 }
 
-void Triangle::setVertex(Point3 v, int idx)
+void Triangle::setIndex(int i, int idx)
 {
-  vertices[idx] = v;
+  indices[idx] = i;
 }
