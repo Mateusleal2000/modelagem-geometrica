@@ -37,11 +37,9 @@ void OctTree::initOctTree()
 
   std::sort(globalVerticesVector->begin(), globalVerticesVector->end());
 
-
-  //auto it = std::unique(globalVerticesVector->begin(), globalVerticesVector->end());
-  //bool wasUnique = (it == globalVerticesVector->end());
-  //if(wasUnique) std::cout<<"Was unique\n";
-
+  // auto it = std::unique(globalVerticesVector->begin(), globalVerticesVector->end());
+  // bool wasUnique = (it == globalVerticesVector->end());
+  // if(wasUnique) std::cout<<"Was unique\n";
 
   root->mapPointsToIndex();
   printOctTree(root);

@@ -3,5 +3,7 @@
         <file>shaders/pass_through.vert</file>
         <file>shaders/simple.frag</file>
         <file>objects/pontoObj.obj</file>
+        <file>objects/test.obj</file>
+        <file>objects/boeing777.obj</file>
     </qresource>
 </RCC>

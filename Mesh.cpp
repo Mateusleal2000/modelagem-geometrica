@@ -34,6 +34,8 @@ void getValues(const char &t, std::vector<float> *vec, std::string str)
             std::string face;
             std::getline(new_stream, face, '/');
             vec->at(pos++) = std::stof(face) - 1;
+            // This section of commented code is useful in case we need to retrive normal indexes
+
             // index = 0;
             // while (std::getline(new_stream, face, '/'))
             // {
@@ -51,7 +53,20 @@ void getValues(const char &t, std::vector<float> *vec, std::string str)
 Mesh::Mesh(std::string fileName) : fileName(fileName)
 {
     buildMesh();
+    setTriangles();
+    max = std::vector<float>(3, -1e8);
+    min = std::vector<float>(3, 1e8);
+    calcMaxMin();
     calculateCenter();
+}
+
+void Mesh::setTriangles()
+{
+    for (int i = 0; i < indices.size(); i += 3)
+    {
+        Triangle tri(indices[i], indices[i + 1], indices[i + 2]);
+        triangles.emplace_back(tri);
+    }
 }
 
 void Mesh::classify(Node *node)
@@ -77,7 +92,7 @@ void Mesh::classify(Node *node)
 
 Point3 Mesh::getCenter()
 {
-    return Point3(0, 0, 0);
+    return this->center;
 }
 
 Point3 Mesh::getVertex(int idx)
@@ -85,9 +100,31 @@ Point3 Mesh::getVertex(int idx)
     return this->vertices[idx];
 }
 
+void Mesh::calcMaxMin()
+{
+    for (Triangle triangle : this->getTriangles())
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            float new_max = getVertex(triangle.getIndex(i))[i];
+            float new_min = getVertex(triangle.getIndex(i))[i];
+
+            if (max[i] < new_max)
+            {
+                max[i] = new_max;
+            }
+
+            if (min[i] > new_min)
+            {
+                min[i] = new_min;
+            }
+        }
+    }
+}
+
 float Mesh::dMax()
 {
-    return 0.0;
+    return std::max({max[0] - min[0], max[1] - min[1], max[2] - min[2]});
 }
 
 std::vector<Triangle> Mesh::getTriangles()
@@ -102,21 +139,19 @@ void Mesh::setCenter(Point3 center)
 
 void Mesh::calculateCenter()
 {
+    float d = dMax() / 2;
+    setCenter(Point3(min[0] + d, min[1] + d, min[2] + d));
     return;
 }
 
 void Mesh::buildMesh()
 {
-    // std::string path = ":/objects/" + fileName;
-    //  std::string path2 = "/modelagem-geometrica/objects/pontoObj.obj";
     QDir dir(QDir::currentPath());
     dir.cdUp();
 
     QString path = dir.path();
-    std::cout << path.toStdString() << std::endl;
     std::string result = "";
     std::fstream myObj;
-    // std::cout << path << "\n";
     myObj.open(path.toStdString() + "/objects/" + fileName, std::ios::in);
     std::cout << std::fixed;
     std::cout << std::setprecision(4);
@@ -150,20 +185,15 @@ void Mesh::buildMesh()
             }
         }
     }
-    std::cout << "Vertices\n";
-    for (int i = 0; i < vertices.size(); i++)
-    {
-        std::cout << vertices.at(i).x() << " " << vertices.at(i).y() << " " << vertices.at(i).z() << "\n";
-    }
-    std::cout << "Indices\n";
-    for (int i = 0; i < indices.size(); i += 3)
-    {
-        std::cout << indices.at(i) << " " << indices.at(i + 1) << " " << indices.at(i + 2) << "\n";
-    }
-    // std::cout << "Normal Indices\n";
-    // for (int i = 0; i < indices_normal.size(); i += 3)
+    // std::cout << "Vertices\n";
+    // for (int i = 0; i < vertices.size(); i++)
     // {
-    //     std::cout << indices_normal.at(i) << " " << indices_normal.at(i + 1) << " " << indices_normal.at(i + 2) << "\n";
+    //     std::cout << vertices.at(i).x() << " " << vertices.at(i).y() << " " << vertices.at(i).z() << "\n";
+    // }
+    // std::cout << "Indices\n";
+    // for (int i = 0; i < indices.size(); i += 3)
+    // {
+    //     std::cout << indices.at(i) << " " << indices.at(i + 1) << " " << indices.at(i + 2) << "\n";
     // }
     return;
 }
@@ -250,20 +280,20 @@ bool Mesh::checkTriangleIntersect(Triangle triangle, Box *box)
 // Checar se a box está no interior da mesh ou no exterior pelo algoritmo do tiro.
 bool Mesh::checkMembership(Box *box)
 {
-    
-    for(int i = 0;i<6;i++){
+
+    for (int i = 0; i < 6; i++)
+    {
         bool hitted = false;
-        for(int j = 0;j<triangles.size();j++){
-            if(checkRayTriangleIntersect(box->getNormalAt(i),triangles.at(j))){
+        for (int j = 0; j < triangles.size(); j++)
+        {
+            if (checkRayTriangleIntersect(box->getNormalAt(i), triangles.at(j)))
+            {
                 continue;
             }
         }
         return false;
     }
     return true;
-
-
-    
 
     // int hits = 0;
     // // achar as 3 normais do cubo
@@ -284,7 +314,7 @@ bool Mesh::checkMembership(Box *box)
     return false;
 }
 
-bool Mesh::checkRayTriangleIntersect(std::pair<Point3,Vec3> normal, Triangle triangle)
+bool Mesh::checkRayTriangleIntersect(std::pair<Point3, Vec3> normal, Triangle triangle)
 {
     // Plane intersection
 
@@ -304,37 +334,34 @@ bool Mesh::checkRayTriangleIntersect(std::pair<Point3,Vec3> normal, Triangle tri
         return false; // paralel to plane
     }
 
-
-    
-    float t = dot(p_minuspi,triangleNormal) / denom;
-    if(t<10e-5 || t>105){
-    	return false;
+    float t = dot(p_minuspi, triangleNormal) / denom;
+    if (t < 10e-5 || t > 105)
+    {
+        return false;
     }
-
 
     Vec3 BC = unit(C - B);
     Vec3 CA = unit(A - C);
     // AB
 
-    Point3 Q = normal.second*t + normal.first;
-    
+    Point3 Q = normal.second * t + normal.first;
+
     Vec3 AQ = unit(Q - A);
     Vec3 BQ = unit(Q - B);
     Vec3 CQ = unit(Q - C);
 
-    float ABcrossAQval = dot(cross(AB,AQ),triangleNormal);
-    float BCcrossBQval = dot(cross(BC,BQ),triangleNormal);
-    float CAcrossCQval = dot(cross(CA,CQ),triangleNormal);
+    float ABcrossAQval = dot(cross(AB, AQ), triangleNormal);
+    float BCcrossBQval = dot(cross(BC, BQ), triangleNormal);
+    float CAcrossCQval = dot(cross(CA, CQ), triangleNormal);
 
-    if((ABcrossAQval > 0 && BCcrossBQval > 0 && CAcrossCQval >0) || (ABcrossAQval >= 0 && BCcrossBQval >=0 && CAcrossCQval>=0)){
+    if ((ABcrossAQval > 0 && BCcrossBQval > 0 && CAcrossCQval > 0) || (ABcrossAQval >= 0 && BCcrossBQval >= 0 && CAcrossCQval >= 0))
+    {
         return true;
     }
     return false;
 
-
-
-        // calcula o raio a partir da normal
-        // checa se há interseção com o triângulo
+    // calcula o raio a partir da normal
+    // checa se há interseção com o triângulo
 }
 
 bool Mesh::separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent)

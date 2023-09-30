@@ -84,7 +84,6 @@ void GLWidget::initializeGL()
 
 	float *vertices = verticesVector->data();
 
-
 	QColor *vertexColors = colorVector->data();
 
 	Node *root = octtree->getRoot();
@@ -99,12 +98,12 @@ void GLWidget::initializeGL()
 
 	QMatrix4x4 viewMatrix;
 	// viewMatrix.rotate(30, 0, 1, 0);
-	//viewMatrix.rotate(30, 1, 0, 0);
-	viewMatrix.translate(0, 0, 30);
+	// viewMatrix.rotate(30, 1, 0, 0);
+	viewMatrix.translate(2, 0, 18);
 	viewMatrix = viewMatrix.inverted();
 
 	QMatrix4x4 modelMatrix;
-	//modelMatrix.rotate(45,0,0,1);
+	// modelMatrix.rotate(45,0,0,1);
 
 	int projectionMatrixLocation = m_program->uniformLocation("projectionMatrix");
 	int modelMatrixLocation = m_program->uniformLocation("modelMatrix");
@@ -113,7 +112,6 @@ void GLWidget::initializeGL()
 	// create buffer for 2 interleaved attributes: position and color, 4 vertices, 3 floats each
 	// std::vector<float> vertexBufferData(2*4*3);
 	std::vector<float> vertexBufferData(2 * vv->size() * 3);
-
 
 	// create new data buffer - the following memory copy stuff should
 	// be placed in some convenience class in later tutorials
@@ -149,7 +147,7 @@ void GLWidget::initializeGL()
 	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	m_indexBufferObject.bind();
 	// O segundo argumento deveria ser aquele mesmo???
-	m_indexBufferObject.allocate(indices,  indicesVector->size()*sizeof(unsigned int));
+	m_indexBufferObject.allocate(indices, indicesVector->size() * sizeof(unsigned int));
 
 	// std::cout<<sizeof(indices) <<std::endl;
 	//  stride = number of bytes for one vertex (with all its attributes) = 3+3 floats = 6*4 = 24 Bytes
@@ -201,7 +199,7 @@ void GLWidget::paintGL()
 	m_vao.bind();
 	// For old Intel drivers you may need to explicitely re-bind the index buffer, because
 	// these drivers do not remember the binding-state of the index/element-buffer in the VAO
-	//m_indexBufferObject.bind();
+	// m_indexBufferObject.bind();
 
 	// now draw the two triangles via index drawing
 	// - GL_TRIANGLES - draw individual triangles via elements
@@ -222,33 +220,35 @@ void GLWidget::paintGL()
 // BRB-BRF, TRF-TRB
 void GLWidget::treeWalk(Node *root)
 {
-	indicesVector->push_back(root->getIndex(PointLabel::TLB));
-	indicesVector->push_back(root->getIndex(PointLabel::TRB));
-	indicesVector->push_back(root->getIndex(PointLabel::BLB));
-	indicesVector->push_back(root->getIndex(PointLabel::BRB));
-	indicesVector->push_back(root->getIndex(PointLabel::TLB));
-	indicesVector->push_back(root->getIndex(PointLabel::BLB));
-	indicesVector->push_back(root->getIndex(PointLabel::TRB));
-	indicesVector->push_back(root->getIndex(PointLabel::BRB));
+	if (root->getState() == State::BLACK)
+	{
+		indicesVector->push_back(root->getIndex(PointLabel::TLB));
+		indicesVector->push_back(root->getIndex(PointLabel::TRB));
+		indicesVector->push_back(root->getIndex(PointLabel::BLB));
+		indicesVector->push_back(root->getIndex(PointLabel::BRB));
+		indicesVector->push_back(root->getIndex(PointLabel::TLB));
+		indicesVector->push_back(root->getIndex(PointLabel::BLB));
+		indicesVector->push_back(root->getIndex(PointLabel::TRB));
+		indicesVector->push_back(root->getIndex(PointLabel::BRB));
 
-	indicesVector->push_back(root->getIndex(PointLabel::TLF));
-	indicesVector->push_back(root->getIndex(PointLabel::TRF));
-	indicesVector->push_back(root->getIndex(PointLabel::BLF));
-	indicesVector->push_back(root->getIndex(PointLabel::BRF));
-	indicesVector->push_back(root->getIndex(PointLabel::TLF));
-	indicesVector->push_back(root->getIndex(PointLabel::BLF));
-	indicesVector->push_back(root->getIndex(PointLabel::TRF));
-	indicesVector->push_back(root->getIndex(PointLabel::BRF));
+		indicesVector->push_back(root->getIndex(PointLabel::TLF));
+		indicesVector->push_back(root->getIndex(PointLabel::TRF));
+		indicesVector->push_back(root->getIndex(PointLabel::BLF));
+		indicesVector->push_back(root->getIndex(PointLabel::BRF));
+		indicesVector->push_back(root->getIndex(PointLabel::TLF));
+		indicesVector->push_back(root->getIndex(PointLabel::BLF));
+		indicesVector->push_back(root->getIndex(PointLabel::TRF));
+		indicesVector->push_back(root->getIndex(PointLabel::BRF));
 
-	indicesVector->push_back(root->getIndex(PointLabel::BLB));
-	indicesVector->push_back(root->getIndex(PointLabel::BLF));
-	indicesVector->push_back(root->getIndex(PointLabel::TLF));
-	indicesVector->push_back(root->getIndex(PointLabel::TLB));
-	indicesVector->push_back(root->getIndex(PointLabel::BRB));
-	indicesVector->push_back(root->getIndex(PointLabel::BRF));
-	indicesVector->push_back(root->getIndex(PointLabel::TRF));
-	indicesVector->push_back(root->getIndex(PointLabel::TRB));
-
+		indicesVector->push_back(root->getIndex(PointLabel::BLB));
+		indicesVector->push_back(root->getIndex(PointLabel::BLF));
+		indicesVector->push_back(root->getIndex(PointLabel::TLF));
+		indicesVector->push_back(root->getIndex(PointLabel::TLB));
+		indicesVector->push_back(root->getIndex(PointLabel::BRB));
+		indicesVector->push_back(root->getIndex(PointLabel::BRF));
+		indicesVector->push_back(root->getIndex(PointLabel::TRF));
+		indicesVector->push_back(root->getIndex(PointLabel::TRB));
+	}
 	if (root->getState() != State::GRAY)
 	{
 		return;

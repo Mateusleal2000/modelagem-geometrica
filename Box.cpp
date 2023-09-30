@@ -86,9 +86,9 @@ Point3 Box::getCenter()
 
 Point3 Box::getExtent()
 {
-  return Point3({fabs(this->getPoint(PointLabel::TLB)[0] - this->getPoint(PointLabel::BRF)[0]),
-                 fabs(this->getPoint(PointLabel::TLB)[1] - this->getPoint(PointLabel::BRF)[1]),
-                 fabs(this->getPoint(PointLabel::TLB)[2] - this->getPoint(PointLabel::BRF)[2])});
+  return Point3({std::fabs(this->getPoint(PointLabel::TLB)[0] - this->getPoint(PointLabel::BRF)[0]),
+                 std::fabs(this->getPoint(PointLabel::TLB)[1] - this->getPoint(PointLabel::BRF)[1]),
+                 std::fabs(this->getPoint(PointLabel::TLB)[2] - this->getPoint(PointLabel::BRF)[2])});
 }
 
 void Box::calcBoxNormals()
@@ -101,6 +101,7 @@ void Box::calcBoxNormals()
   normals.emplace_back(std::pair<Point3, Vec3>(getPoint(TLF), unit(cross((getPoint(BRB) - getPoint(BRF)), getPoint(TRF) - getPoint(BRF)))));
 }
 
-std::pair<Point3,Vec3> &Box::getNormalAt(int idx){
+std::pair<Point3, Vec3> &Box::getNormalAt(int idx)
+{
   return normals.at(idx);
 }

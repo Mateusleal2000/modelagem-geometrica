@@ -16,8 +16,10 @@ public:
 	float dMax() override;
 	bool checkTriangleIntersect(Triangle triangle, Box *box);
 	bool checkMembership(Box *box);
-	bool checkRayTriangleIntersect(std::pair<Point3,Vec3> normal, Triangle triangle);
+	bool checkRayTriangleIntersect(std::pair<Point3, Vec3> normal, Triangle triangle);
 	bool separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent);
+	void calcMaxMin();
+	void setTriangles();
 
 private:
 	void buildMesh();
@@ -28,6 +30,8 @@ private:
 	std::vector<Triangle> triangles;
 	std::vector<int> indices;
 	std::vector<int> indices_normal;
+	std::vector<float> max;
+	std::vector<float> min;
 	std::vector<Point3> vertices;
 	std::string fileName;
 };
