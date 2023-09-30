@@ -251,7 +251,6 @@ bool Mesh::checkTriangleIntersect(Triangle triangle, Box *box)
 bool Mesh::checkMembership(Box *box)
 {
     
-    int hits = 0;
     for(int i = 0;i<6;i++){
         bool hitted = false;
         for(int j = 0;j<triangles.size();j++){
