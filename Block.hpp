@@ -13,9 +13,9 @@ public:
 	Point3 getCenter();
 
 private:
-	float side_x;
-	float side_y;
-	float side_z;
+	float size_x;
+	float size_y;
+	float size_z;
 	Point3 p_min;
 };
 

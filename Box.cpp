@@ -100,3 +100,7 @@ void Box::calcBoxNormals()
   normals.emplace_back(std::pair<Point3, Vec3>(getPoint(TLF), unit(cross((getPoint(TRF) - getPoint(BRF)), getPoint(BLF) - getPoint(BRF)))));
   normals.emplace_back(std::pair<Point3, Vec3>(getPoint(TLF), unit(cross((getPoint(BRB) - getPoint(BRF)), getPoint(TRF) - getPoint(BRF)))));
 }
+
+std::pair<Point3,Vec3> &Box::getNormalAt(int idx){
+  return normals.at(idx);
+}

@@ -33,6 +33,7 @@ public:
   void setPoint(int label, Point3 point);
   void setIndex(int label, int idx);
   Point3 &getPoint(int label);
+  std::pair<Point3,Vec3> &getNormalAt(int idx);
   unsigned int getIndex(int idx);
   Point3 getCenter();
   Point3 getExtent();
@@ -46,7 +47,7 @@ public:
 private:
   std::vector<Point3> boxPoints;
   std::vector<int> boxIndex;
-  std::vector<Pair<Point3, Vec3>> normals;
+  std::vector<std::pair<Point3, Vec3>> normals;
 };
 
 inline void Box::setPoint(int label, Point3 point)

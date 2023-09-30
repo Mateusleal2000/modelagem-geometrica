@@ -250,6 +250,21 @@ bool Mesh::checkTriangleIntersect(Triangle triangle, Box *box)
 // Checar se a box está no interior da mesh ou no exterior pelo algoritmo do tiro.
 bool Mesh::checkMembership(Box *box)
 {
+    
+    int hits = 0;
+    for(int i = 0;i<6;i++){
+        bool hitted = false;
+        for(int j = 0;j<triangles.size();j++){
+            if(checkRayTriangleIntersect(box->getNormalAt(i),triangles.at(j))){
+                continue;
+            }
+        }
+        return false;
+    }
+    return true;
+
+
+    
 
     // int hits = 0;
     // // achar as 3 normais do cubo
@@ -270,7 +285,7 @@ bool Mesh::checkMembership(Box *box)
     return false;
 }
 
-bool Mesh::checkRayTriangleIntersect(Point3 normal, Triangle triangle)
+bool Mesh::checkRayTriangleIntersect(std::pair<Point3,Vec3> normal, Triangle triangle)
 {
     // Plane intersection
 
@@ -282,21 +297,45 @@ bool Mesh::checkRayTriangleIntersect(Point3 normal, Triangle triangle)
     Vec3 AC = unit(C - A);
 
     Vec3 triangleNormal = cross(AB, AC);
-    float dotprod = dot(triangleNormal, normal);
-    if (std::abs(dotprod) < 10e-5)
+    float denom = dot(triangleNormal, normal.second);
+
+    Vec3 p_minuspi = Vec3(A - normal.first);
+    if (std::abs(denom) < 10e-5)
     {
         return false; // paralel to plane
     }
+
+
+    
+    float t = dot(p_minuspi,triangleNormal) / denom;
+    if(t<10e-5 || t>105){
+    	return false;
+    }
+
 
     Vec3 BC = unit(C - B);
     Vec3 CA = unit(A - C);
     // AB
 
-    Point3 Q =
+    Point3 Q = normal.second*t + normal.first;
+    
+    Vec3 AQ = unit(Q - A);
+    Vec3 BQ = unit(Q - B);
+    Vec3 CQ = unit(Q - C);
+
+    float ABcrossAQval = dot(cross(AB,AQ),triangleNormal);
+    float BCcrossBQval = dot(cross(BC,BQ),triangleNormal);
+    float CAcrossCQval = dot(cross(CA,CQ),triangleNormal);
+
+    if((ABcrossAQval > 0 && BCcrossBQval > 0 && CAcrossCQval >0) || (ABcrossAQval >= 0 && BCcrossBQval >=0 && CAcrossCQval>=0)){
+        return true;
+    }
+    return false;
+
+
 
         // calcula o raio a partir da normal
         // checa se há interseção com o triângulo
-        return 0;
 }
 
 bool Mesh::separatingAxisTest(Point3 axis, Point3 v0, Point3 v1, Point3 v2, Point3 boxExtent)
