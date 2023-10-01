@@ -25,6 +25,7 @@ public:
 	float calcVolume() const;
 	void printOctTree(Node *node);
 	void treeScale(float scaleFactor, Node *node);
+	void treeVolume(float *volume, Node *node);
 
 private:
 	void subdivide(Node *node);

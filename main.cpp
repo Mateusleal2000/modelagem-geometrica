@@ -27,7 +27,10 @@ int main(int argc, char **argv)
 	// oct->setSolid(block);
 	oct->setSolid(sp);
 	oct->initOctTree();
-	oct->treeScale(5.0, oct->getRoot());
+	// oct->treeScale(5.0, oct->getRoot());
+	float sphereVolume = 0.0;
+	oct->treeVolume(&sphereVolume, oct->getRoot());
+	std::cout << "Volume da esfera " << sphereVolume;
 
 	// for (int i = 0; i < 8; i++)
 	// {

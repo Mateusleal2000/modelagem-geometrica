@@ -185,6 +185,27 @@ void OctTree::treeScale(float scaleFactor, Node *node)
   updateGlobalVertexVector(scaleFactor);
 }
 
+void OctTree::treeVolume(float *volume, Node *node)
+{
+  // node->getBox()->scaleBoxes(scaleFactor);
+
+  Point3 p = node->getBox()->getExtent();
+  float l = p[0] * p[1] * p[2];
+
+  if (node->getState() == State::BLACK)
+  {
+    *volume = *volume + l;
+  }
+  if (node->getState() == State::GRAY)
+  {
+    for (int i = 0; i < 8; i++)
+    {
+      treeVolume(volume, node->getChild(i));
+    }
+  }
+  return;
+}
+
 void OctTree::updateGlobalVertexVector(float scaleFactor)
 {
   // std::for_each(globalVerticesVector->begin(), globalVerticesVector->end(), [&](Point3 const &p)
