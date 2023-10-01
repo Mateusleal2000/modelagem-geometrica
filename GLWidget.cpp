@@ -23,7 +23,7 @@ void createIndexFile(std::vector<unsigned int> *indicesVector, std::vector<float
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_shader(0)
 {
 	std::cout << "GLWidget consturtor\n";
-	setFixedSize(880, 920);
+	setFixedSize(780, 960);
 	verticesVector = new std::vector<float>();
 	indicesVector = new std::vector<unsigned int>();
 	colorVector = new std::vector<QColor>();

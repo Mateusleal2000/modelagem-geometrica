@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <string>
+#include <QScrollArea>
 #include "Mesh.hpp"
 #include "Sphere.hpp"
 #include "Block.hpp"
@@ -27,5 +28,6 @@ private:
 	QHBoxLayout *layout;
 	GLWidget *glwidget;
 	OptionsWidget *opWidget;
+	QScrollArea * scrollarea;
 };
 #endif

@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QFormLayout>
 #include <QLabel>
 #include "Mesh.hpp"
 #include <string>
@@ -16,6 +17,8 @@ class OptionsWidget : public QWidget
 public:
 	OptionsWidget(QWidget *parent = 0);
 	void openObj();
+	void processSphere();
+	void processBlock();
 
 signals:
 	void objChosen(std::string filename);
@@ -23,14 +26,14 @@ signals:
 	void blockChosen(Point3 ref, float x, float y, float z);
 
 private:
-	QHBoxLayout *layout;
+	QFormLayout *layout;
 	QPushButton *addObjectButton;
 	QPushButton *addSphereButton;
 	QPushButton *addBlockButton;
-	QLabel *sphereLabel;
+	QPushButton *addObjectFile;
+
+
 	QLabel *objLabel;
-	QLabel *blockLabel;
-	QLineEdit *fileedit;
 	QLineEdit *spherex;
 	QLineEdit *spherey;
 	QLineEdit *spherez;
@@ -43,10 +46,10 @@ private:
 	QLineEdit *blocksizey;
 	QLineEdit *blocksizez;
 
-	QGridLayout *spherelabellayout;
-	QGridLayout *objlabellayout;
-	QGridLayout *blocklabellayout;
 
+	QLabel * sphereTitle;
+	QLabel * objTitle;
+	QLabel * blockTitle;
 	// QPushButton * addDepthButton;
 	// QPushButton * subtractDepthButton;
 };

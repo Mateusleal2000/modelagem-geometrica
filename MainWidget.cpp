@@ -6,9 +6,11 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     glwidget = new GLWidget(this);
     layout = new QHBoxLayout(this);
     opWidget = new OptionsWidget(this);
-    setFixedSize(1280, 920);
+    scrollarea = new QScrollArea(this);
+    scrollarea->setWidget(opWidget);
+    setFixedSize(1280, 960);
     layout->addWidget(glwidget);
-    layout->addWidget(opWidget);
+    layout->addWidget(scrollarea);
 
     setLayout(layout);
 }
