@@ -4,14 +4,26 @@
 #include "vec3.hpp"
 #include "Scene.hpp"
 #include "Viewport.hpp"
+#include <QVector3D>
+
+const float YAW         = -90.0f;
+const float PITCH       =  0.0f;
+const float SENSITIVITY =  0.1f;
 
 class Camera{
   public:
-    // metodo possivelmente substituível pelas coisas do openGL
-    void rayCast(Scene* scene, Viewport* vp);
+  Camera() = default;
+  Camera(QVector3D __eye, QVector3D __worldUp);
   private:
-    Point3 coord;
-    Point3 up;
-    Point3 eye;
+  QVector3D eye;
+  QVector3D front;
+  QVector3D right;
+  QVector3D up;
+  QVector3D worldUp;
+  float yaw;
+  float pitch;
+
+  private:
+  void updateCameraGeometry();
 };
 #endif

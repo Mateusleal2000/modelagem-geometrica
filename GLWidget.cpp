@@ -29,6 +29,7 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_sha
 	m_projection->perspective(45.0f, 640.0 / float(480), 0.01f, 100.0f);
 	viewMatrix = new QMatrix4x4();
 	setFocusPolicy(Qt::TabFocus);
+	setCursor(Qt::BlankCursor);
 }
 
 void GLWidget::initializeGL()
@@ -103,9 +104,12 @@ void GLWidget::initializeGL()
 
 	// viewMatrix.rotate(30, 0, 1, 0);
 
-	viewMatrix->rotate(-30, 1, 0, 0);
-	viewMatrix->translate(2, 0, 18);
-	*viewMatrix = viewMatrix->inverted();
+	//viewMatrix->rotate(-30, 1, 0, 0);
+	//viewMatrix->translate(2, 0, 18);
+	//*viewMatrix = viewMatrix->inverted();
+	std::cout<<"aqui\n";
+	viewMatrix->lookAt(QVector3D(0,0,0),QVector3D(0,0,-1),QVector3D(0,1,0));
+
 
 	QMatrix4x4 modelMatrix;
 	// modelMatrix.rotate(45,0,0,1);
@@ -269,24 +273,90 @@ bool GLWidget::event(QEvent * event){
 	makeCurrent();
 		
 		
+	//setFocus();
 	if (event->type() == QEvent::KeyPress) {
 
-          QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-          if(keyEvent->key() == Qt::Key_Left){
-
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if(keyEvent->key() == Qt::Key_A){
+			
 			//*m_projection = 2 * (*m_projection);
 			makeCurrent();
 
 			glUseProgram(m_program->programId());
 			//m_program->bind();
 			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-			viewMatrix->translate(-1,0,0);
+			viewMatrix->translate(0.3,0,0);
 			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
 			//m_program->release();
-		  }
-		  //return true;
-        
+			event->accept();
+		}  
+
+
+        else if(keyEvent->key() == Qt::Key_D){
+			
+			//*m_projection = 2 * (*m_projection);
+			makeCurrent();
+
+			glUseProgram(m_program->programId());
+			//m_program->bind();
+			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			viewMatrix->translate(-0.3,0,0);
+			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			event->accept();
+			//m_program->release();
+		}
+
+
+        else if(keyEvent->key() == Qt::Key_W){
+			
+			//*m_projection = 2 * (*m_projection);
+			makeCurrent();
+
+			glUseProgram(m_program->programId());
+			//m_program->bind();
+			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			viewMatrix->translate(0,0,0.3);
+			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			event->accept();
+			//m_program->release();
+		}
+
+
+        else if(keyEvent->key() == Qt::Key_S){
+			
+			//*m_projection = 2 * (*m_projection);
+			makeCurrent();
+
+			glUseProgram(m_program->programId());
+			//m_program->bind();
+			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			viewMatrix->translate(0,0,-0.3);
+			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			//m_program->release();
+			event->accept();
+		}
+
+		  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//else if(event->type() == QEvent::MouseMove){
+	//	setFocus();
+	//}
+
 	}
+	update();
 	return QWidget::event(event);
 
 //	glUseProgram(m_program->programId());
@@ -296,7 +366,7 @@ bool GLWidget::event(QEvent * event){
 //	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
 //	//m_program->release();
 //	update();
-	}
+}
 
 
 void GLWidget::mousePressEvent(QMouseEvent *event)

@@ -28,6 +28,7 @@ private:
 	std::vector<QColor> *colorVector;
 
 	QMatrix4x4 * viewMatrix;
+	QMatrix4x4 * lookatmatrix;
 	QMatrix4x4 *m_projection;
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;
