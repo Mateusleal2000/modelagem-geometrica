@@ -4,12 +4,14 @@
 #include <string>
 #include <cstdint>
 #include <set>
+#include <QObject>
 
 #include "Node.hpp"
 #include "Solid.hpp"
 
-class OctTree
+class OctTree : public QObject
 {
+	Q_OBJECT
 public:
 	OctTree();
 	OctTree(int maxDepth);
@@ -24,8 +26,11 @@ public:
 	std::vector<Point3> *getGlobalVerticesVector();
 	float calcVolume() const;
 	void printOctTree(Node *node);
+
+public slots:
 	void treeScale(float scaleFactor, Node *node);
 	void treeVolume(float *volume, Node *node);
+	void addSolid(Solid *solid);
 
 private:
 	void subdivide(Node *node);

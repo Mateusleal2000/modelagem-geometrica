@@ -30,6 +30,17 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_sha
 	viewMatrix = new QMatrix4x4();
 	setFocusPolicy(Qt::TabFocus);
 	setCursor(Qt::BlankCursor);
+	connect(&camera,&Camera::viewChanged,this,&GLWidget::updateViewMatrix);
+	connect(this,&GLWidget::leftClicked,&camera,&Camera::updateLeft);
+	connect(this,&GLWidget::rightClicked,&camera,&Camera::updateRight);
+	connect(this,&GLWidget::upClicked,&camera,&Camera::updateUp);
+	connect(this,&GLWidget::downClicked,&camera,&Camera::updateDown);
+
+	connect(this,&GLWidget::downArrowClicked,&camera,&Camera::updateDownArrow);
+
+	connect(this,&GLWidget::upArrowClicked,&camera,&Camera::updateUpArrow);
+
+
 }
 
 void GLWidget::initializeGL()
@@ -107,8 +118,9 @@ void GLWidget::initializeGL()
 	//viewMatrix->rotate(-30, 1, 0, 0);
 	//viewMatrix->translate(2, 0, 18);
 	//*viewMatrix = viewMatrix->inverted();
-	std::cout<<"aqui\n";
-	viewMatrix->lookAt(QVector3D(0,0,0),QVector3D(0,0,-1),QVector3D(0,1,0));
+
+	//viewMatrix->lookAt(QVector3D(0,0,0),QVector3D(0,0,-1),QVector3D(0,1,0));
+	*viewMatrix = camera.getViewMatrix();
 
 
 	QMatrix4x4 modelMatrix;
@@ -270,94 +282,90 @@ void GLWidget::treeWalk(Node *root)
 }
 
 bool GLWidget::event(QEvent * event){
-	makeCurrent();
+	//makeCurrent();
 		
 		
 	//setFocus();
 	if (event->type() == QEvent::KeyPress) {
 
+
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
         if(keyEvent->key() == Qt::Key_A){
 			
-			//*m_projection = 2 * (*m_projection);
-			makeCurrent();
+	//makeCurrent();
+			////*m_projection = 2 * (*m_projection);
+			//makeCurrent();
 
-			glUseProgram(m_program->programId());
-			//m_program->bind();
-			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-			viewMatrix->translate(0.3,0,0);
-			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
-			//m_program->release();
-			event->accept();
+			//glUseProgram(m_program->programId());
+			////m_program->bind();
+			//int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			//viewMatrix->translate(0.3,0,0);
+			//m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			////m_program->release();
+			//event->accept();
+			emit leftClicked();
 		}  
 
 
         else if(keyEvent->key() == Qt::Key_D){
 			
-			//*m_projection = 2 * (*m_projection);
-			makeCurrent();
+			////*m_projection = 2 * (*m_projection);
+			//makeCurrent();
 
-			glUseProgram(m_program->programId());
-			//m_program->bind();
-			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-			viewMatrix->translate(-0.3,0,0);
-			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
-			event->accept();
-			//m_program->release();
+			//glUseProgram(m_program->programId());
+			////m_program->bind();
+			//int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			//viewMatrix->translate(-0.3,0,0);
+			//m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			//event->accept();
+			////m_program->release();
+			emit rightClicked();
 		}
 
 
         else if(keyEvent->key() == Qt::Key_W){
 			
-			//*m_projection = 2 * (*m_projection);
-			makeCurrent();
+		//	//*m_projection = 2 * (*m_projection);
+		//	makeCurrent();
 
-			glUseProgram(m_program->programId());
-			//m_program->bind();
-			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-			viewMatrix->translate(0,0,0.3);
-			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
-			event->accept();
-			//m_program->release();
+		//	glUseProgram(m_program->programId());
+		//	//m_program->bind();
+		//	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+		//	viewMatrix->translate(0,0,0.3);
+		//	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+		//	event->accept();
+		//	//m_program->release();
+			emit upClicked();
+
 		}
 
 
         else if(keyEvent->key() == Qt::Key_S){
 			
-			//*m_projection = 2 * (*m_projection);
-			makeCurrent();
+		//	//*m_projection = 2 * (*m_projection);
+		//	makeCurrent();
 
-			glUseProgram(m_program->programId());
-			//m_program->bind();
-			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-			viewMatrix->translate(0,0,-0.3);
-			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
-			//m_program->release();
-			event->accept();
+		//	glUseProgram(m_program->programId());
+		//	//m_program->bind();
+		//	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+		//	viewMatrix->translate(0,0,-0.3);
+		//	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+		//	//m_program->release();
+		//	event->accept();
+			emit downClicked();
 		}
 
-		  
+		else if(keyEvent->key() == Qt::Key_Down){
+			emit downArrowClicked();
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//else if(event->type() == QEvent::MouseMove){
-	//	setFocus();
-	//}
+		else if (keyEvent->key() == Qt::Key_Up){
+			emit upArrowClicked();
+		}
 
 	}
-	update();
-	return QWidget::event(event);
+	//update();
+	return QOpenGLWidget::event(event);
 
 //	glUseProgram(m_program->programId());
 //	//m_program->bind();
@@ -371,16 +379,34 @@ bool GLWidget::event(QEvent * event){
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-	//*m_projection = 2 * (*m_projection);
-	makeCurrent();
+	////*m_projection = 2 * (*m_projection);
+	//makeCurrent();
 	
+	//glUseProgram(m_program->programId());
+	////m_program->bind();
+	//int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+	//viewMatrix->translate(1,0,0);
+	//m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+	////m_program->release();
+	update();
+}
+
+void GLWidget::updateViewMatrix(QMatrix4x4 newView){
+
+	//*m_projection = 2 * (*m_projection);
+	//float * data = newView.data();
+	//for(int i = 0; i<16;i++){
+	//	std::cout << data[i] << " ";
+	//}
+	std::cout<<std::endl;
+	makeCurrent();
+
 	glUseProgram(m_program->programId());
 	//m_program->bind();
 	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
-	viewMatrix->translate(1,0,0);
-	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
-	//m_program->release();
+	m_program->setUniformValue(viewMatrixLocation,newView);
 	update();
+	//m_program->release();
 }
 
 void GLWidget::setOctTree(OctTree *octtree)

@@ -12,6 +12,7 @@
 #include <QApplication>
 #include <QHBoxLayout>
 #include "testGL.hpp"
+#include "MainWidget.hpp"
 // #include "testTriangle.hpp"
 
 int main(int argc, char **argv)
@@ -29,8 +30,8 @@ int main(int argc, char **argv)
 	oct->initOctTree();
 	// oct->treeScale(5.0, oct->getRoot());
 	float sphereVolume = 0.0;
-	oct->treeVolume(&sphereVolume, oct->getRoot());
-	std::cout << "Volume da esfera " << sphereVolume;
+	// oct->treeVolume(&sphereVolume, oct->getRoot());
+	// std::cout << "Volume da esfera " << sphereVolume << std::endl;
 
 	// for (int i = 0; i < 8; i++)
 	// {
@@ -38,15 +39,16 @@ int main(int argc, char **argv)
 	// }
 
 	QApplication app(argc, argv);
-	QWidget *w = new QWidget();
-	GLWidget *gl = new GLWidget(w);
-	gl->setOctTree(oct);
+	std::cout<<"aqui/n";
+	MainWidget *w = new MainWidget();
+	//GLWidget *gl = new GLWidget(w);
+	//gl->setOctTree(oct);
 	// testGL *tgl = new testGL(w);
-	w->setFixedSize(640, 480);
-	QHBoxLayout *layout = new QHBoxLayout(w);
-	layout->addWidget(gl);
-	// layout->addWidget(tgl);
-	w->setLayout(layout);
+	//w->setFixedSize(640, 480);
+	//QHBoxLayout *layout = new QHBoxLayout(w);
+	//layout->addWidget(gl);
+	//// layout->addWidget(tgl);
+	//w->setLayout(layout);
 
 	w->show();
 

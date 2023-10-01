@@ -1,3 +1,5 @@
+#ifndef GL_WIDGET_H
+#define GL_WIDGET_H
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
@@ -7,10 +9,12 @@
 #include <QOpenGLShader>
 #include <QEvent>
 #include <QKeyEvent>
+#include "Camera.hpp"
 #include "OctTree.hpp"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
+	Q_OBJECT
 public:
 	GLWidget(QWidget *parent = 0);
 	void initializeGL() override;
@@ -19,6 +23,18 @@ public:
 	void mousePressEvent(QMouseEvent *event);
 	void setOctTree(OctTree *octtree);
 	bool event(QEvent * event) override;
+
+	signals:
+	void leftClicked();
+	void rightClicked();
+	void upClicked();
+	void downClicked();
+	void upArrowClicked();
+	void downArrowClicked();
+	void mouseMoved(float xoffset, float yoffset); 
+
+	public slots:
+	void updateViewMatrix(QMatrix4x4 newView);
 
 private:
 	void treeWalk(Node *root);
@@ -38,4 +54,9 @@ private:
 	QOpenGLShader *m_shader;
 
 
+	Camera camera;
+
+
 };
+
+#endif
