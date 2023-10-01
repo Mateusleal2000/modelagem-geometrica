@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <fstream>
+#include <algorithm>
 
 OctTree::OctTree() : root(nullptr) {}
 
@@ -22,7 +23,7 @@ void OctTree::initOctTree()
   float dmax = 0.0;
   Point3 center(0.0, 0.0, 0.0);
   getMaxDimensionAndCenter(&dmax, &center);
-  std::cout << "DMax: " << dmax << " Center: " << center << "\n";
+  std::cout << "DMax: " << dmax << "\n";
   float halfdMax = dmax / 2.0;
   Point3 TLB = Point3(center.x() - halfdMax, center.y() + halfdMax, center.z() - halfdMax);
 
@@ -162,6 +163,38 @@ void OctTree::divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, P
 
   new_BRF = BRF;
   new_BRF[coord] = BRF[coord] + (l / 2.0);
+}
+
+void OctTree::treeScaleRecursive(float scaleFactor, Node *node)
+{
+  node->getBox()->scaleBoxes(scaleFactor);
+
+  if (node->getState() == State::GRAY)
+  {
+    for (int i = 0; i < 8; i++)
+    {
+      treeScaleRecursive(scaleFactor, node->getChild(i));
+    }
+  }
+  return;
+}
+
+void OctTree::treeScale(float scaleFactor, Node *node)
+{
+  treeScaleRecursive(scaleFactor, node);
+  updateGlobalVertexVector(scaleFactor);
+}
+
+void OctTree::updateGlobalVertexVector(float scaleFactor)
+{
+  // std::for_each(globalVerticesVector->begin(), globalVerticesVector->end(), [&](Point3 const &p)
+  //               { scaleFactor *p; });
+  for (int i = 0; i < globalVerticesVector->size(); i++)
+  {
+    globalVerticesVector->at(i) = globalVerticesVector->at(i) * scaleFactor;
+  }
+
+  std::cout << globalVerticesVector->at(30) << "\n";
 }
 
 void OctTree::printOctTree(Node *node)

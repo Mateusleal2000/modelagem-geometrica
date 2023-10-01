@@ -63,6 +63,14 @@ float Box::getBmax(int axis)
   return max;
 }
 
+void Box::scaleBoxes(float scaleFactor)
+{
+  for (int i = 0; i < boxPoints.size(); i++)
+  {
+    boxPoints.at(i) = boxPoints.at(i) * scaleFactor;
+  }
+}
+
 void Box::calcBoxPoints()
 {
   Point3 tlb = boxPoints[0];

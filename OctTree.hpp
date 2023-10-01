@@ -24,6 +24,7 @@ public:
 	std::vector<Point3> *getGlobalVerticesVector();
 	float calcVolume() const;
 	void printOctTree(Node *node);
+	void treeScale(float scaleFactor, Node *node);
 
 private:
 	void subdivide(Node *node);
@@ -32,6 +33,8 @@ private:
 	void makeOctTree(Node *root, int depth);
 	void convertSetToVector();
 	void getMaxDimensionAndCenter(float *dmax, Point3 *center);
+	void treeScaleRecursive(float scaleFactor, Node *node = nullptr);
+	void updateGlobalVertexVector(float scaleFactor);
 	Node *root;
 	int maxDepth;
 	std::vector<Solid *> solid;

@@ -33,7 +33,7 @@ public:
   void setPoint(int label, Point3 point);
   void setIndex(int label, int idx);
   Point3 &getPoint(int label);
-  std::pair<Point3,Vec3> &getNormalAt(int idx);
+  std::pair<Point3, Vec3> &getNormalAt(int idx);
   unsigned int getIndex(int idx);
   Point3 getCenter();
   Point3 getExtent();
@@ -43,6 +43,7 @@ public:
   float getBmax(int axis);
   void calcBoxPoints();
   void calcBoxNormals();
+  void scaleBoxes(float scaleFactor);
 
 private:
   std::vector<Point3> boxPoints;
