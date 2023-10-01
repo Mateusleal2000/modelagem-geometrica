@@ -6,7 +6,7 @@ Sphere::Sphere(float rad, Point3 center) : radius(rad), center(center)
 {
 }
 
-void Sphere::classify(Node *node)
+State Sphere::classify(Node *node)
 {
   float dmin = 0;
   float dmax = 0;
@@ -32,14 +32,17 @@ void Sphere::classify(Node *node)
   if (dmax <= radius2)
   {
     node->setState(State::BLACK);
+    return State::BLACK;
   }
   else if (dmin <= radius2)
   {
     node->setState(State::GRAY);
+    return State::GRAY;
   }
   else
   {
     node->setState(State::WHITE);
+    return State::WHITE;
   }
 }
 
@@ -66,4 +69,14 @@ Point3 Sphere::getCenter()
 float Sphere::dMax()
 {
   return 2.0 * radius;
+}
+
+Vec3 Sphere::maxValAxis()
+{
+  return Vec3(center.x() + radius, center.y() + radius, center.z() + radius);
+}
+
+Vec3 Sphere::minValAxis()
+{
+  return Vec3(center.x() - radius, center.y() - radius, center.z() - radius);
 }

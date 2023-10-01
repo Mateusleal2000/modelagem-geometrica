@@ -69,7 +69,7 @@ void Mesh::setTriangles()
     }
 }
 
-void Mesh::classify(Node *node)
+State Mesh::classify(Node *node)
 {
     bool found = false;
     int i = 0;
@@ -81,13 +81,20 @@ void Mesh::classify(Node *node)
     if (found)
     {
         node->setState(State::GRAY);
+        return State::GRAY;
     }
     else
     {
         bool inside = checkMembership(node->getBox());
-        inside ? node->setState(State::BLACK) : node->setState(State::WHITE);
+        if (inside)
+        {
+            node->setState(State::BLACK);
+            return State::BLACK;
+        }
+        node->setState(State::WHITE);
+        return State::WHITE;
+        // inside ? node->setState(State::BLACK) : node->setState(State::WHITE);
     }
-    return;
 }
 
 Point3 Mesh::getCenter()
@@ -124,7 +131,36 @@ void Mesh::calcMaxMin()
 
 float Mesh::dMax()
 {
+    for (Triangle triangle : this->getTriangles())
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            float new_max = getVertex(triangle.getIndex(i))[i];
+            float new_min = getVertex(triangle.getIndex(i))[i];
+
+            if (max[i] < new_max)
+            {
+                max[i] = new_max;
+            }
+
+            if (min[i] > new_min)
+            {
+                min[i] = new_min;
+            }
+        }
+    }
     return std::max({max[0] - min[0], max[1] - min[1], max[2] - min[2]});
+}
+
+Vec3 Mesh::maxValAxis()
+{
+
+    return Vec3(max[0], max[1], max[2]);
+}
+
+Vec3 Mesh::minValAxis()
+{
+    return Vec3(min[0], min[1], min[2]);
 }
 
 std::vector<Triangle> Mesh::getTriangles()

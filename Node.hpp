@@ -5,11 +5,11 @@
 #include "Box.hpp"
 #include <set>
 
-enum class State
+enum State
 {
-  BLACK,
-  WHITE,
-  GRAY
+  BLACK = 3,
+  WHITE = 0,
+  GRAY = 1
 };
 
 class Node

@@ -18,7 +18,6 @@ qt_add_executable(modelagem main.cpp
                   Box.cpp 
                   Node.cpp 
                   OctTree.cpp 
-                  TestSolid.cpp 
                   Sphere.cpp
                   Mesh.cpp
                   GLWidget.cpp

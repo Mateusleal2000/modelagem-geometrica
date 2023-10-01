@@ -3,9 +3,9 @@
 #include <iomanip>
 #include <fstream>
 
-OctTree::OctTree() : solid(nullptr), root(nullptr) {}
+OctTree::OctTree() : root(nullptr) {}
 
-OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), solid(nullptr), root(nullptr)
+OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), root(nullptr)
 {
   globalVerticesSet = new std::set<Point3>();
   globalVerticesVector = new std::vector<Point3>();
@@ -15,13 +15,14 @@ OctTree::~OctTree()
 {
   root->deletePoints();
   delete root;
-  delete solid;
 }
 
 void OctTree::initOctTree()
 {
-  float dmax = solid->dMax();
-  Point3 center = solid->getCenter();
+  float dmax = 0.0;
+  Point3 center(0.0, 0.0, 0.0);
+  getMaxDimensionAndCenter(&dmax, &center);
+  std::cout << "DMax: " << dmax << " Center: " << center << "\n";
   float halfdMax = dmax / 2.0;
   Point3 TLB = Point3(center.x() - halfdMax, center.y() + halfdMax, center.z() - halfdMax);
 
@@ -47,19 +48,44 @@ void OctTree::initOctTree()
 
 void OctTree::makeOctTree(Node *child, int depth)
 {
-  Node *root = child;
+  State current_state = State::WHITE;
+  Node *root = nullptr;
+  root = child;
   root->setState(State::BLACK);
-  if (depth > 1)
+  for (int i = 0; i < solid.size(); i++)
   {
-    solid->classify(root);
-    if (root->getState() == State::GRAY)
+    if (depth > 1)
     {
-      subdivide(root);
-      for (int i = 0; i < 8; i++)
+      State s = solid.at(i)->classify(root);
+      int final_state = current_state | s;
+
+      if (final_state == 0)
       {
-        makeOctTree(root->getChild(i), depth - 1);
+        current_state = State::WHITE;
+      }
+      else if (final_state == 3)
+      {
+        current_state = State::BLACK;
+        break;
+      }
+      else if (final_state == 1)
+      {
+        current_state = State::GRAY;
       }
     }
+  }
+  if (current_state == State::GRAY)
+  {
+    root->setState(State::GRAY);
+    subdivide(root);
+    for (int i = 0; i < 8; i++)
+    {
+      makeOctTree(root->getChild(i), depth - 1);
+    }
+  }
+  else if (current_state == State::WHITE)
+  {
+    root->setState(State::WHITE);
   }
 }
 
@@ -78,6 +104,21 @@ Node *OctTree::getRoot()
 int OctTree::getMaxDepth() const
 {
   return maxDepth;
+}
+
+void OctTree::getMaxDimensionAndCenter(float *dmax, Point3 *center)
+{
+  Vec3 global_min(10e8, 10e8, 10e8);
+  Vec3 global_max(-10e8, -10e8, -10e8);
+  for (int i = 0; i < solid.size(); i++)
+  {
+    global_max = maxCompare(solid.at(i)->maxValAxis(), global_max);
+    global_min = minCompare(solid.at(i)->minValAxis(), global_min);
+    *center = *center + solid.at(i)->getCenter();
+  }
+  *center = *center / static_cast<float>(solid.size());
+  Vec3 res = global_max - global_min;
+  *dmax = std::max({res.x(), res.y(), res.z()});
 }
 
 std::vector<Point3> *OctTree::getGlobalVerticesVector()

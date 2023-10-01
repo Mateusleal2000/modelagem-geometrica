@@ -68,7 +68,7 @@ public:
         return ((e[0] == v[0]) && (e[1] == v[1]) && (e[2] == v[2]));
     }
 
-    bool operator<(const Vec3& v) const
+    bool operator<(const Vec3 &v) const
 
     {
         // return e[0] < v.x() || (e[0] == v.x() && e[1] < v.y()) || (e[0] == v.x() && e[1] == v.y() && e[2] < v.z());
@@ -141,6 +141,16 @@ inline Vec3 cross(const Vec3 &v0, const Vec3 &v1)
 inline Vec3 unit(const Vec3 &v)
 {
     return v / v.len();
+}
+
+inline Vec3 maxCompare(const Vec3 &v1, const Vec3 &v2)
+{
+    return Vec3(std::max(v1[0], v2[0]), std::max(v1[1], v2[1]), std::max(v1[2], v2[2]));
+}
+
+inline Vec3 minCompare(const Vec3 &v1, const Vec3 &v2)
+{
+    return Vec3(std::min(v1[0], v2[0]), std::min(v1[1], v2[1]), std::min(v1[2], v2[2]));
 }
 
 inline Vec3 normalize(const Vec3 &v)

@@ -8,12 +8,14 @@ class Mesh : public Solid
 public:
 	Mesh();
 	Mesh(std::string fileName);
-	void classify(Node *node) override;
+	State classify(Node *node) override;
 	void setCenter(Point3 center);
 	Point3 getCenter() override;
 	Point3 getVertex(int idx);
 	std::vector<Triangle> getTriangles();
 	float dMax() override;
+	Vec3 maxValAxis();
+	Vec3 minValAxis();
 	bool checkTriangleIntersect(Triangle triangle, Box *box);
 	bool checkMembership(Box *box);
 	bool checkRayTriangleIntersect(std::pair<Point3, Vec3> normal, Triangle triangle);

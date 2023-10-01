@@ -8,8 +8,10 @@ class Block : public Solid
 public:
 	Block();
 	Block(Point3 p_min, float size_x, float size_y, float size_z);
-	void classify(Node *node) override;
+	State classify(Node *node) override;
 	float dMax();
+	Vec3 maxValAxis();
+	Vec3 minValAxis();
 	Point3 getCenter();
 
 private:

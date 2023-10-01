@@ -31,9 +31,10 @@ private:
 	void divideBox(const Point3 &TLB, const Point3 &BRF, Point3 &new_TLB, Point3 &new_BRF, uint8_t depth);
 	void makeOctTree(Node *root, int depth);
 	void convertSetToVector();
+	void getMaxDimensionAndCenter(float *dmax, Point3 *center);
 	Node *root;
 	int maxDepth;
-	Solid *solid;
+	std::vector<Solid *> solid;
 	std::set<Point3> *globalVerticesSet;
 	std::vector<Point3> *globalVerticesVector;
 };
@@ -50,7 +51,7 @@ inline void OctTree::setMaxDepth(int maxDepth)
 
 inline void OctTree::setSolid(Solid *solid)
 {
-	this->solid = solid;
+	this->solid.push_back(solid);
 }
 
 inline void OctTree::convertSetToVector()
