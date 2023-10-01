@@ -5,6 +5,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLShader>
+#include <QEvent>
+#include <QKeyEvent>
 #include "OctTree.hpp"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -16,6 +18,7 @@ public:
 	void paintGL() override;
 	void mousePressEvent(QMouseEvent *event);
 	void setOctTree(OctTree *octtree);
+	bool event(QEvent * event) override;
 
 private:
 	void treeWalk(Node *root);
@@ -23,6 +26,8 @@ private:
 	std::vector<float> *verticesVector;
 	std::vector<unsigned int> *indicesVector;
 	std::vector<QColor> *colorVector;
+
+	QMatrix4x4 * viewMatrix;
 	QMatrix4x4 *m_projection;
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;
@@ -30,4 +35,6 @@ private:
 	QOpenGLBuffer m_indexBufferObject;
 	QOpenGLShaderProgram *m_program;
 	QOpenGLShader *m_shader;
+
+
 };

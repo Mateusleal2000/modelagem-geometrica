@@ -27,10 +27,14 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent), m_program(0), m_sha
 	colorVector = new std::vector<QColor>();
 	m_projection = new QMatrix4x4();
 	m_projection->perspective(45.0f, 640.0 / float(480), 0.01f, 100.0f);
+	viewMatrix = new QMatrix4x4();
+	setFocusPolicy(Qt::TabFocus);
 }
 
 void GLWidget::initializeGL()
 {
+
+	std::cout<<"aqui\n";
 	// Set up the rendering context, load shaders and other resources, etc.:
 	initializeOpenGLFunctions();
 
@@ -82,6 +86,7 @@ void GLWidget::initializeGL()
 		colorVector->push_back(QColor("#49eb34"));
 	}
 
+
 	float *vertices = verticesVector->data();
 
 	QColor *vertexColors = colorVector->data();
@@ -96,11 +101,11 @@ void GLWidget::initializeGL()
 	// Camera matrices creation
 	//-------------------------------------------
 
-	QMatrix4x4 viewMatrix;
 	// viewMatrix.rotate(30, 0, 1, 0);
-	// viewMatrix.rotate(30, 1, 0, 0);
-	viewMatrix.translate(2, 0, 18);
-	viewMatrix = viewMatrix.inverted();
+
+	viewMatrix->rotate(-30, 1, 0, 0);
+	viewMatrix->translate(2, 0, 18);
+	*viewMatrix = viewMatrix->inverted();
 
 	QMatrix4x4 modelMatrix;
 	// modelMatrix.rotate(45,0,0,1);
@@ -144,7 +149,7 @@ void GLWidget::initializeGL()
 	// create a new buffer for the indexes
 	m_indexBufferObject = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer); // Mind: use 'IndexBuffer' here
 	m_indexBufferObject.create();
-	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	m_indexBufferObject.setUsagePattern(QOpenGLBuffer::DynamicDraw);
 	m_indexBufferObject.bind();
 	// O segundo argumento deveria ser aquele mesmo???
 	m_indexBufferObject.allocate(indices, indicesVector->size() * sizeof(unsigned int));
@@ -158,7 +163,8 @@ void GLWidget::initializeGL()
 	m_program->setAttributeBuffer(0, GL_FLOAT, 0, 3, stride);
 
 	m_program->setUniformValue(modelMatrixLocation, modelMatrix);
-	m_program->setUniformValue(viewMatrixLocation, viewMatrix);
+	//m_program->setUniformValue(viewMatrixLocation, *viewMatrix);
+	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
 	m_program->setUniformValue(projectionMatrixLocation, *m_projection);
 
 	// layout location 1 - vec3 with colors
@@ -259,10 +265,51 @@ void GLWidget::treeWalk(Node *root)
 	}
 }
 
+bool GLWidget::event(QEvent * event){
+	makeCurrent();
+		
+		
+	if (event->type() == QEvent::KeyPress) {
+
+          QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+          if(keyEvent->key() == Qt::Key_Left){
+
+			//*m_projection = 2 * (*m_projection);
+			makeCurrent();
+
+			glUseProgram(m_program->programId());
+			//m_program->bind();
+			int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+			viewMatrix->translate(-1,0,0);
+			m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+			//m_program->release();
+		  }
+		  //return true;
+        
+	}
+	return QWidget::event(event);
+
+//	glUseProgram(m_program->programId());
+//	//m_program->bind();
+//	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+//	viewMatrix->translate(1,0,0);
+//	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+//	//m_program->release();
+//	update();
+	}
+
+
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
 	//*m_projection = 2 * (*m_projection);
-	std::cout << "dadada\n";
+	makeCurrent();
+	
+	glUseProgram(m_program->programId());
+	//m_program->bind();
+	int viewMatrixLocation = m_program->uniformLocation("viewMatrix");
+	viewMatrix->translate(1,0,0);
+	m_program->setUniformValue(viewMatrixLocation,*viewMatrix);
+	//m_program->release();
 	update();
 }
 
