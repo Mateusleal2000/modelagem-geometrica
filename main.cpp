@@ -18,13 +18,14 @@
 int main(int argc, char **argv)
 {
 
-	OctTree *oct = new OctTree(13);
-	Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
+	OctTree *oct = new OctTree(8);
+	// Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
 	// Sphere *sp = new Sphere(0.5, Point3(0.5, 0.5, 0.5));
 	// Mesh m1("test.obj");
 	Mesh m1("boeing777.obj");
 	oct->setSolid(&m1);
-	// Block *block = new Block(Point3(0., 0., 0.), 2., 5., 10.);
+
+	// Block *block = new Block(Point3(1., -1., 0.), 2., 2., 10.);
 	// oct->setSolid(block);
 	// oct->setSolid(sp);
 	oct->initOctTree();

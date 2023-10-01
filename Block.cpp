@@ -35,7 +35,7 @@ void Block::classify(Node *node)
     }
     if (blackCount == 3)
     {
-        std::cout << "chegou no 3\n";
+        // std::cout << "chegou no 3\n";
         node->setState(State::BLACK);
     }
     else
