@@ -1,3 +1,5 @@
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
 #include "vec3.hpp"
 
 class Triangle
@@ -10,3 +12,5 @@ public:
 private:
 	std::vector<int> indices;
 };
+
+#endif

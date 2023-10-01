@@ -1,3 +1,5 @@
+#ifndef MESH_H
+#define MESH_H
 #include "Solid.hpp"
 #include "Triangle.hpp"
 #include <vector>
@@ -37,3 +39,5 @@ private:
 	std::vector<Point3> vertices;
 	std::string fileName;
 };
+
+#endif

@@ -22,19 +22,21 @@ public:
 	void paintGL() override;
 	void mousePressEvent(QMouseEvent *event);
 	void setOctTree(OctTree *octtree);
-	bool event(QEvent * event) override;
+	bool event(QEvent *event) override;
+	void addSolid(Solid *solid);
 
-	signals:
+signals:
 	void leftClicked();
 	void rightClicked();
 	void upClicked();
 	void downClicked();
 	void upArrowClicked();
 	void downArrowClicked();
-	void mouseMoved(float xoffset, float yoffset); 
+	void mouseMoved(float xoffset, float yoffset);
 
-	public slots:
+public slots:
 	void updateViewMatrix(QMatrix4x4 newView);
+	void renderScene();
 
 private:
 	void treeWalk(Node *root);
@@ -43,8 +45,8 @@ private:
 	std::vector<unsigned int> *indicesVector;
 	std::vector<QColor> *colorVector;
 
-	QMatrix4x4 * viewMatrix;
-	QMatrix4x4 * lookatmatrix;
+	QMatrix4x4 *viewMatrix;
+	QMatrix4x4 *lookatmatrix;
 	QMatrix4x4 *m_projection;
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo;
@@ -53,10 +55,7 @@ private:
 	QOpenGLShaderProgram *m_program;
 	QOpenGLShader *m_shader;
 
-
 	Camera camera;
-
-
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <algorithm>
 
-OctTree::OctTree() : root(nullptr) , QObject() {}
+OctTree::OctTree() : root(nullptr), QObject() {}
 
 OctTree::OctTree(int maxDepth) : maxDepth(maxDepth), root(nullptr), QObject()
 {
@@ -218,11 +218,12 @@ void OctTree::updateGlobalVertexVector(float scaleFactor)
   std::cout << globalVerticesVector->at(30) << "\n";
 }
 
-void OctTree::addSolid(Solid * solid){
+void OctTree::addSolid(Solid *solid)
+{
   setSolid(solid);
   root = nullptr;
-  globalVerticesSet = new std::set<Point3>();
-  globalVerticesVector = new std::vector<Point3>();
+  globalVerticesSet->clear();
+  globalVerticesVector->clear();
   initOctTree();
 }
 

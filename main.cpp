@@ -39,16 +39,16 @@ int main(int argc, char **argv)
 	// }
 
 	QApplication app(argc, argv);
-	std::cout<<"aqui/n";
+	std::cout << "aqui/n";
 	MainWidget *w = new MainWidget();
-	//GLWidget *gl = new GLWidget(w);
-	//gl->setOctTree(oct);
-	// testGL *tgl = new testGL(w);
-	//w->setFixedSize(640, 480);
-	//QHBoxLayout *layout = new QHBoxLayout(w);
-	//layout->addWidget(gl);
+	// GLWidget *gl = new GLWidget(w);
+	// gl->setOctTree(oct);
+	//  testGL *tgl = new testGL(w);
+	// w->setFixedSize(640, 480);
+	// QHBoxLayout *layout = new QHBoxLayout(w);
+	// layout->addWidget(gl);
 	//// layout->addWidget(tgl);
-	//w->setLayout(layout);
+	// w->setLayout(layout);
 
 	w->show();
 

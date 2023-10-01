@@ -27,6 +27,7 @@ qt_add_executable(modelagem main.cpp
                   Triangle.cpp
                   Camera.cpp
                   MainWidget.cpp
+                  OptionsWidget.cpp
                   resources.qrc
 )
 
