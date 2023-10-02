@@ -18,17 +18,43 @@ int main(int argc, char **argv)
 {
 
 	OctTree *oct = new OctTree(8);
-	Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
-	// Sphere *sp = new Sphere(0.5, Point3(0.5, 0.5, 0.5));
-	// Mesh m1("test.obj");
+
+	// Testing Sphere
+	// Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
+	// oct->setSolid(sp);
+	// oct->initOctTree();
+
+	// Testing Mesh
 	// Mesh m1("boeing777.obj");
 	// oct->setSolid(&m1);
-	Block *block = new Block(Point3(6., 0., 0.), 2., 8., 10.);
-	oct->setSolid(block);
+	// oct->initOctTree();
+
+	// Testing Block
+	// Block *block = new Block(Point3(0., 0., 0.), 2., 8., 10.);
+	// oct->setSolid(block);
+	// oct->initOctTree();
+
+	// Testing Scale
+	// Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
 	// oct->setSolid(sp);
+	// oct->initOctTree();
+	// oct->treeScale(0.5, oct->getRoot());
+
+	// Testing Union
+	// Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
+	// oct->setSolid(sp);
+	// Block *block = new Block(Point3(0., 0., 0.), 2., 8., 10.);
+	// oct->setSolid(block);
+	// oct->initOctTree();
+
+	// Testing Volume
+	Sphere *sp = new Sphere(5.0, Point3(0.0, 0.0, 0.0));
+	oct->setSolid(sp);
 	oct->initOctTree();
-	// oct->treeScale(5.0, oct->getRoot());
 	float sphereVolume = 0.0;
+	oct->treeVolume(&sphereVolume, oct->getRoot());
+	std::cout << "Volume :" << sphereVolume << "\n";
+
 	// oct->treeVolume(&sphereVolume, oct->getRoot());
 	// std::cout << "Volume da esfera " << sphereVolume;
 

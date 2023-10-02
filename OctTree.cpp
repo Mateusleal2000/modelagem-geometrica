@@ -25,6 +25,8 @@ void OctTree::initOctTree()
   getMaxDimensionAndCenter(&dmax, &center);
   std::cout << "DMax: " << dmax << "\n";
   float halfdMax = dmax / 2.0;
+  // float halfdMax = 100.0;
+  // center = Point3(18.0, 0.0, 0.0);
   Point3 TLB = Point3(center.x() - halfdMax, center.y() + halfdMax, center.z() - halfdMax);
 
   Point3 BRF = Point3(center.x() + halfdMax, center.y() - halfdMax, center.z() + halfdMax);
@@ -86,6 +88,8 @@ void OctTree::makeOctTree(Node *child, int depth)
   }
   else if (current_state == State::WHITE)
   {
+
+    // std::cout << "White\n";
     root->setState(State::WHITE);
   }
 }
@@ -116,6 +120,7 @@ void OctTree::getMaxDimensionAndCenter(float *dmax, Point3 *center)
     global_max = maxCompare(solid.at(i)->maxValAxis(), global_max);
     global_min = minCompare(solid.at(i)->minValAxis(), global_min);
     *center = *center + solid.at(i)->getCenter();
+    std::cout << *center;
   }
   *center = *center / static_cast<float>(solid.size());
   Vec3 res = global_max - global_min;
@@ -182,6 +187,7 @@ void OctTree::treeScaleRecursive(float scaleFactor, Node *node)
 void OctTree::treeScale(float scaleFactor, Node *node)
 {
   treeScaleRecursive(scaleFactor, node);
+  std::cout << "errado\n";
   updateGlobalVertexVector(scaleFactor);
 }
 
