@@ -99,11 +99,11 @@ void GLWidget::initializeGL()
 	QMatrix4x4 viewMatrix;
 	// viewMatrix.rotate(30, 0, 1, 0);
 	// viewMatrix.rotate(30, 1, 0, 0);
-	viewMatrix.translate(2, 0, 18);
+	viewMatrix.translate(2, 0, 25);//18
 	viewMatrix = viewMatrix.inverted();
 
 	QMatrix4x4 modelMatrix;
-	// modelMatrix.rotate(45,0,0,1);
+	// modelMatrix.rotate(90,1,0,0);
 
 	int projectionMatrixLocation = m_program->uniformLocation("projectionMatrix");
 	int modelMatrixLocation = m_program->uniformLocation("modelMatrix");
